@@ -1,0 +1,94 @@
+gas estimate: 22774698
+code: 0
+codespace: ""
+data: 0A250A1E2F636F736D7761736D2E7761736D2E76312E4D736753746F7265436F6465120308920B
+events:
+- attributes:
+  - index: true
+    key: c3BlbmRlcg==
+    value: anVubzFncmd4Zzl0dDNtZ3Q5ZjJuOHYwNzgwam43M2U4Zm0yYXY4ZXplag==
+  - index: true
+    key: YW1vdW50
+    value: MjI3NzQ3MHVqdW5veA==
+  type: coin_spent
+- attributes:
+  - index: true
+    key: cmVjZWl2ZXI=
+    value: anVubzE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHh0cW12cA==
+  - index: true
+    key: YW1vdW50
+    value: MjI3NzQ3MHVqdW5veA==
+  type: coin_received
+- attributes:
+  - index: true
+    key: cmVjaXBpZW50
+    value: anVubzE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHh0cW12cA==
+  - index: true
+    key: c2VuZGVy
+    value: anVubzFncmd4Zzl0dDNtZ3Q5ZjJuOHYwNzgwam43M2U4Zm0yYXY4ZXplag==
+  - index: true
+    key: YW1vdW50
+    value: MjI3NzQ3MHVqdW5veA==
+  type: transfer
+- attributes:
+  - index: true
+    key: c2VuZGVy
+    value: anVubzFncmd4Zzl0dDNtZ3Q5ZjJuOHYwNzgwam43M2U4Zm0yYXY4ZXplag==
+  type: message
+- attributes:
+  - index: true
+    key: ZmVl
+    value: MjI3NzQ3MHVqdW5veA==
+  type: tx
+- attributes:
+  - index: true
+    key: YWNjX3NlcQ==
+    value: anVubzFncmd4Zzl0dDNtZ3Q5ZjJuOHYwNzgwam43M2U4Zm0yYXY4ZXplai8w
+  type: tx
+- attributes:
+  - index: true
+    key: c2lnbmF0dXJl
+    value: KzRSVkQxeXdpYnNRb0RCQUhRTW55eFliUWVjcVNrZHdmeXJKbUpsSXd6eDlvOFV3WklnRW9yS1B0V1Vzd3ExcFJVTjdmVDFZclRRd3BYbmFnYXJYQ1E9PQ==
+  type: tx
+- attributes:
+  - index: true
+    key: YWN0aW9u
+    value: L2Nvc213YXNtLndhc20udjEuTXNnU3RvcmVDb2Rl
+  type: message
+- attributes:
+  - index: true
+    key: bW9kdWxl
+    value: d2FzbQ==
+  - index: true
+    key: c2VuZGVy
+    value: anVubzFncmd4Zzl0dDNtZ3Q5ZjJuOHYwNzgwam43M2U4Zm0yYXY4ZXplag==
+  type: message
+- attributes:
+  - index: true
+    key: Y29kZV9pZA==
+    value: MTQyNg==
+  type: store_code
+gas_used: "17533417"
+gas_wanted: "22774698"
+height: "843603"
+info: ""
+logs:
+- events:
+  - attributes:
+    - key: action
+      value: /cosmwasm.wasm.v1.MsgStoreCode
+    - key: module
+      value: wasm
+    - key: sender
+      value: juno1grgxg9tt3mgt9f2n8v0780jn73e8fm2av8ezej
+    type: message
+  - attributes:
+    - key: code_id
+      value: "1426"
+    type: store_code
+  log: ""
+  msg_index: 0
+raw_log: '[{"events":[{"type":"message","attributes":[{"key":"action","value":"/cosmwasm.wasm.v1.MsgStoreCode"},{"key":"module","value":"wasm"},{"key":"sender","value":"juno1grgxg9tt3mgt9f2n8v0780jn73e8fm2av8ezej"}]},{"type":"store_code","attributes":[{"key":"code_id","value":"1426"}]}]}]'
+timestamp: ""
+tx: null
+txhash: 80C99B25E76A29AE41ED2F2C7D6F10792CD0D0BCF91B49CDDA7D0353614EF03F

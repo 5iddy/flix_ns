@@ -1,0 +1,11 @@
+{
+    "purchase_price": {
+        "amount":"100",
+        "denom":"ujunox"
+        
+    },
+    "transfer_price": {
+        "amount":"100",
+        "denom":"ujunox"   
+    }
+}
