@@ -99,7 +99,12 @@ pub fn execute_transfer(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::ResolveRecord { name } => query_resolver(deps, env, name),
+        QueryMsg::ResolveRecord { mut name } => {
+            if name.ends_with(&SUFFIX) {
+                name = name.strip_suffix(&SUFFIX).unwrap().to_string();
+            }
+            query_resolver(deps, env, name)
+        },
         QueryMsg::Config {} => to_binary(&CONFIG.load(deps.storage)?),
     }
 }
