@@ -4,13 +4,11 @@ use serde::{Deserialize, Serialize};
 use cosmwasm_std::{Addr, Coin};
 use cw_storage_plus::{Item, Map};
 
-
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Config {
     pub purchase_price: Option<Coin>,
     pub transfer_price: Option<Coin>,
 }
-
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct NameRecord {

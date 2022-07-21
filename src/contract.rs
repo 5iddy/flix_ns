@@ -47,10 +47,10 @@ pub fn execute_register(
     mut name: String,
 ) -> Result<Response, ContractError> {
     // we only need to check here - at point of registration
-    if name.ends_with(&SUFFIX){
+    if name.ends_with(&SUFFIX) {
         name = name.strip_suffix(&SUFFIX).unwrap().to_owned();
     }
-    
+
     validate_name(&name)?;
     let config_state = CONFIG.load(deps.storage)?;
     assert_sent_sufficient_coin(&info.funds, config_state.purchase_price)?;
@@ -79,7 +79,7 @@ pub fn execute_transfer(
     assert_sent_sufficient_coin(&info.funds, config_state.transfer_price)?;
 
     let new_owner = deps.api.addr_validate(&to)?;
-    
+
     NAME_RECORDS.update(deps.storage, &name, |record| {
         if let Some(mut record) = record {
             if info.sender != record.owner {

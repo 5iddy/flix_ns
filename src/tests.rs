@@ -165,7 +165,7 @@ mod tests {
         };
         match execute(deps.as_mut(), mock_env(), info.clone(), msg) {
             Ok(_) => panic!("Must return error"),
-            Err(ContractError::NameTooShort { .. }) => {},
+            Err(ContractError::NameTooShort { .. }) => {}
             Err(_) => panic!("Unknown error"),
         }
 
@@ -175,7 +175,7 @@ mod tests {
         };
         match execute(deps.as_mut(), mock_env(), info.clone(), msg) {
             Ok(_) => panic!("Must return error"),
-            Err(ContractError::NameTooLong { .. }) => {},
+            Err(ContractError::NameTooLong { .. }) => {}
             Err(_) => panic!("Unknown error"),
         }
 
@@ -194,7 +194,7 @@ mod tests {
         };
         match execute(deps.as_mut(), mock_env(), info, msg) {
             Ok(_) => panic!("Must return error"),
-            Err(ContractError::InvalidCharacter { .. }) => {},
+            Err(ContractError::InvalidCharacter { .. }) => {}
             Err(_) => panic!("Unknown error"),
         }
     }
