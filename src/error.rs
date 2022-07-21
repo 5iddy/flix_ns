@@ -24,9 +24,6 @@ pub enum ContractError {
     #[error("Name too long (length {length} min_length {max_length})")]
     NameTooLong { length: u64, max_length: u64 },
 
-    #[error("Invalid character(char {c}")]
+    #[error("Invalid character (char {c}) -> Name can only lower case alphabets, numbers, '.', '-' and '_'")]
     InvalidCharacter { c: char },
-
-    #[error("Name doesn't end with .flix but it must. Try '{name}.flix' instead.")]
-    InvalidSuffix { name: String}
 }
