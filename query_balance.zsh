@@ -3,7 +3,7 @@
 # $1 name
 
 source $HOME/.config/zsh/shortcutsrc
-JSONFMT=$(cat query.json)
+JSONFMT=$(cat query_balance.json)
 INFO=$(cat info.json)
 CODE_ID=$(echo $INFO | jq -r '.code_id')
 CONTRACT_ADDR=$(echo $INFO | jq -r '.contract_address')

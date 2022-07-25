@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coin, coins, from_binary, Coin, Deps, DepsMut};
+    use cosmwasm_std::testing::{ mock_dependencies, mock_env, mock_info };
+    use cosmwasm_std::{ coin, coins, from_binary, Coin, Deps, DepsMut };
 
     use crate::contract::{execute, instantiate, query};
     use crate::error::ContractError;
@@ -56,6 +56,16 @@ mod tests {
         let info = mock_info("alice_key", sent);
         let msg = ExecuteMsg::Register {
             name: "alice".to_string(),
+        };
+        let _res = execute(deps, mock_env(), info, msg)
+            .expect("contract successfully handles Register message");
+    }
+
+    fn mock_register_name(deps: DepsMut, key: &str, name: &str, sent: &[Coin]) {
+        // alice can register an available name
+        let info = mock_info(&key, sent);
+        let msg = ExecuteMsg::Register {
+            name: name.to_string(),
         };
         let _res = execute(deps, mock_env(), info, msg)
             .expect("contract successfully handles Register message");
@@ -214,7 +224,7 @@ mod tests {
 
         match res {
             Ok(_) => panic!("register call should fail with insufficient fees"),
-            Err(ContractError::InsufficientFundsSend {}) => {}
+            Err(ContractError::InsufficientFundsSent {}) => {}
             Err(e) => panic!("Unexpected error: {:?}", e),
         }
     }
@@ -234,7 +244,7 @@ mod tests {
 
         match res {
             Ok(_) => panic!("register call should fail with insufficient fees"),
-            Err(ContractError::InsufficientFundsSend {}) => {}
+            Err(ContractError::InsufficientFundsSent {}) => {}
             Err(e) => panic!("Unexpected error: {:?}", e),
         }
     }
@@ -247,7 +257,7 @@ mod tests {
 
         // alice can transfer her name successfully to bob
         let info = mock_info("alice_key", &[]);
-        let msg = ExecuteMsg::Transfer {
+        let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),
         };
@@ -266,7 +276,7 @@ mod tests {
 
         // alice can transfer her name successfully to bob
         let info = mock_info("alice_key", &[coin(1, "earth"), coin(2, "token")]);
-        let msg = ExecuteMsg::Transfer {
+        let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),
         };
@@ -285,7 +295,7 @@ mod tests {
 
         // alice can transfer her name successfully to bob
         let info = mock_info("frank_key", &coins(2, "token"));
-        let msg = ExecuteMsg::Transfer {
+        let msg = ExecuteMsg::TransferName {
             name: "alice42".to_string(),
             to: "bob_key".to_string(),
         };
@@ -310,7 +320,7 @@ mod tests {
 
         // alice can transfer her name successfully to bob
         let info = mock_info("frank_key", &coins(2, "token"));
-        let msg = ExecuteMsg::Transfer {
+        let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),
         };
@@ -335,7 +345,7 @@ mod tests {
 
         // alice can transfer her name successfully to bob
         let info = mock_info("alice_key", &[coin(1, "earth"), coin(2, "token")]);
-        let msg = ExecuteMsg::Transfer {
+        let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),
         };
@@ -344,7 +354,7 @@ mod tests {
 
         match res {
             Ok(_) => panic!("register call should fail with insufficient fees"),
-            Err(ContractError::InsufficientFundsSend {}) => {}
+            Err(ContractError::InsufficientFundsSent {}) => {}
             Err(e) => panic!("Unexpected error: {:?}", e),
         }
 
@@ -369,5 +379,149 @@ mod tests {
         .unwrap();
         let value: ResolveRecordResponse = from_binary(&res).unwrap();
         assert_eq!(None, value.address);
+    }
+
+    #[test]
+    fn send_tokens_works_with_sufficient_fund() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &coins(10, "ujunox"));
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: coins(10, "ujunox"),
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(_) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_works_with_extra_fund() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &coins(15, "ujunox"));
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: coins(10, "ujunox"),
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(_) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_fails_with_insufficient_fund() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &coins(8, "ujunox"));
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: coins(10, "ujunox"),
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(r) => panic!("Expected an error: {:#?}", r),
+            Err(ContractError::InsufficientFundsSent {  }) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_fails_with_insufficient_funds() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &[coin(8, "ujunox"), coin(8, "ucosm")]);
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: vec![coin(10, "ujunox"), coin(10, "ucosm")],
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(r) => panic!("Expected an error: {:#?}", r),
+            Err(ContractError::InsufficientFundsSent {  }) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_fails_with_insufficient_funds2() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &[coin(8, "ujunox"), coin(10, "ucosm")]);
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: vec![coin(10, "ujunox"), coin(10, "ucosm")],
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(r) => panic!("Expected an error: {:#?}", r),
+            Err(ContractError::InsufficientFundsSent {  }) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_fails_with_insufficient_funds3() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &[coin(10, "ujunox"), coin(8, "ucosm")]);
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: vec![coin(10, "ujunox"), coin(10, "ucosm")],
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(r) => panic!("Expected an error: {:#?}", r),
+            Err(ContractError::InsufficientFundsSent {  }) => {},
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+        };
+    }
+
+    #[test]
+    fn send_tokens_works_with_sufficient_funds() {
+        let mut deps = mock_dependencies();
+        let required_coin = coin(2, "token");
+        let required_coins = vec![required_coin.clone()];
+        mock_init_with_price(deps.as_mut(), required_coin.clone(), required_coin.clone());
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &required_coins);
+        mock_register_name(deps.as_mut(), "bob_key", "bob", &required_coins);
+        let info = mock_info("alice_key", &[coin(10, "ujunox"), coin(10, "ucosm")]);
+        let msg = ExecuteMsg::SendTokens {
+            name: "bob".to_string(),
+            amount: vec![coin(10, "ujunox"), coin(10, "ucosm")],
+        };
+
+        match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(_) => {},
+            Err(e) => panic!("Unxpected an error: {:#?}", e),
+        };
     }
 }

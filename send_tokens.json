@@ -1,0 +1,9 @@
+{
+    "send_tokens": {
+        "name": $name,
+        "amount": [{
+            "denom": $denom,
+            "amount": $amount
+        }]
+    }
+}
