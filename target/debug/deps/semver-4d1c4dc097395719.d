@@ -1,0 +1,12 @@
+/home/noodles/workspace/flix_ns/target/debug/deps/semver-4d1c4dc097395719.rmeta: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/lib.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/backport.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/display.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/error.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/eval.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/identifier.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/impls.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/parse.rs
+
+/home/noodles/workspace/flix_ns/target/debug/deps/semver-4d1c4dc097395719.d: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/lib.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/backport.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/display.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/error.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/eval.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/identifier.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/impls.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/parse.rs
+
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/lib.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/backport.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/display.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/error.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/eval.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/identifier.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/impls.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/semver-1.0.13/src/parse.rs:

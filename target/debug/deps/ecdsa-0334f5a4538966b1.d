@@ -1,0 +1,13 @@
+/home/noodles/workspace/flix_ns/target/debug/deps/ecdsa-0334f5a4538966b1.rmeta: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/lib.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/recovery.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/der.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/hazmat.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/sign.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/verify.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/../README.md
+
+/home/noodles/workspace/flix_ns/target/debug/deps/libecdsa-0334f5a4538966b1.rlib: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/lib.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/recovery.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/der.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/hazmat.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/sign.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/verify.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/../README.md
+
+/home/noodles/workspace/flix_ns/target/debug/deps/ecdsa-0334f5a4538966b1.d: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/lib.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/recovery.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/der.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/hazmat.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/sign.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/verify.rs /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/../README.md
+
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/lib.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/recovery.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/der.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/hazmat.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/sign.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/verify.rs:
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/ecdsa-0.13.4/src/../README.md:

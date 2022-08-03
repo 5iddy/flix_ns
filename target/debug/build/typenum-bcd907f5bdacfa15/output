@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/noodles/workspace/flix_ns/target/debug/build/typenum-bcd907f5bdacfa15/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/noodles/workspace/flix_ns/target/debug/build/typenum-bcd907f5bdacfa15/out/op.rs

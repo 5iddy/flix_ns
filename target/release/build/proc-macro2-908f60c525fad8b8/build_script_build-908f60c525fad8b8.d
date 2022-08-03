@@ -1,0 +1,5 @@
+/home/noodles/workspace/flix_ns/target/release/build/proc-macro2-908f60c525fad8b8/build_script_build-908f60c525fad8b8: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.28/build.rs
+
+/home/noodles/workspace/flix_ns/target/release/build/proc-macro2-908f60c525fad8b8/build_script_build-908f60c525fad8b8.d: /home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.28/build.rs
+
+/home/noodles/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.28/build.rs:
