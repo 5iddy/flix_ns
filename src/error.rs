@@ -1,10 +1,14 @@
 use cosmwasm_std::StdError;
 use thiserror::Error;
+use cw721_base::ContractError as Cw721ContractError;
 
 #[derive(Error, Debug)]
 pub enum ContractError {
     #[error("{0}")]
     Std(#[from] StdError),
+
+    #[error("{0}")]
+    Cw721ContractError(#[from] Cw721ContractError),
 
     #[error("Unauthorized")]
     Unauthorized {},
@@ -28,5 +32,11 @@ pub enum ContractError {
     InvalidCharacter { c: char },
 
     #[error("Cannot send tokens to self. {to_address}")]
-    InvalidToAddress { to_address: String }
+    InvalidToAddress { to_address: String },
+    
+    #[error("InvalidTokenReplyId")]
+    InvalidTokenReplyId {},
+
+    #[error("Cw721AlreadyLinked")]
+    Cw721AlreadyLinked {},
 }

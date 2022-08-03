@@ -1,8 +1,9 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{Addr, Coin};
-use cw_storage_plus::{Item, Map};
+use cosmwasm_std::Coin;
+use cw_storage_plus::Item;
+
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Config {
@@ -10,11 +11,11 @@ pub struct Config {
     pub transfer_price: Option<Coin>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct NameRecord {
-    pub owner: Addr,
-}
+// #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// pub struct NameRecord {
+//     pub owner: Addr,
+// }
 
 pub const SUFFIX: &str = ".flix";
 pub const CONFIG: Item<Config> = Item::new("config");
-pub const NAME_RECORDS: Map<&str, NameRecord> = Map::new("name_records");
+// pub const NAME_RECORDS: Map<&str, NameRecord> = Map::new("name_records");

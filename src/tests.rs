@@ -33,17 +33,20 @@ mod tests {
         let msg = InstantiateMsg {
             purchase_price: Some(purchase_price),
             transfer_price: Some(transfer_price),
+            code_id: 1
         };
 
         let info = mock_info("creator", &coins(2, "token"));
-        let _res = instantiate(deps, mock_env(), info, msg)
+        let res = instantiate(deps, mock_env(), info, msg)
             .expect("contract successfully handles InstantiateMsg");
+        println!("Response {res:#?}");
     }
 
     fn mock_init_no_price(deps: DepsMut) {
         let msg = InstantiateMsg {
             purchase_price: None,
             transfer_price: None,
+            code_id: 1
         };
 
         let info = mock_info("creator", &coins(2, "token"));
