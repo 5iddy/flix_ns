@@ -7,8 +7,7 @@ pub type Extension = Option<Empty>;
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
     pub purchase_price: Option<Coin>,
-    pub transfer_price: Option<Coin>,
-    pub code_id: u64
+    pub transfer_price: Option<Coin>
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

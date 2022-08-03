@@ -10,7 +10,7 @@ echo Init Message: $INIT
 echo Code Id: $CODE_ID
 RES=$(junod tx wasm instantiate $CODE_ID \
     $INIT \
-    --amount '50000ujunox'  --label "ns_flix-v0.2.0" --from $WALLET --gas-prices '0.1ujunox' --gas auto --gas-adjustment 1.3 -b block -o json -y --no-admin) &&
+    --amount '50000ujunox'  --label "ns_flix-v0.4.0" --from $WALLET --gas-prices '0.1ujunox' --gas auto --gas-adjustment 1.3 -b block -o json -y --no-admin) &&
 echo $RES > res.json &&
 CONTRACT_ADDR=$(junod query wasm list-contract-by-code $CODE_ID --output json | jq -r '.contracts[0]') &&
 

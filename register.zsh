@@ -6,7 +6,8 @@
 source $HOME/.config/zsh/shortcutsrc
 
 JSONFMT=$(cat register.json)
-CODE_ID=$(cat info.json | jq -r '.code_id')
+INFO=$(cat info.json)
+CODE_ID=$(echo $INFO | jq -r '.code_id')
 CONTRACT_ADDR=$(echo $INFO | jq -r '.contract_address')
 MSG=$(jq --null-input --arg name $2 $JSONFMT)
 echo $MSG

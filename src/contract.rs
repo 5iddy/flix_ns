@@ -1,5 +1,5 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Coin, BankMsg, AllBalanceResponse, Empty
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Coin, BankMsg, AllBalanceResponse, Empty, StdError
 };
 use cw721::Cw721Query;
 
@@ -8,7 +8,7 @@ use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse, Extension};
 use crate::state::{Config, CONFIG, SUFFIX};
 
-use cw721_base::{InstantiateMsg as Cw721InstantiateMsg, MintMsg};
+use cw721_base::{InstantiateMsg as Cw721InstantiateMsg, MintMsg, ContractError as Cw721ContractError};
 
 pub type Cw721MintMsg = MintMsg<Extension>;
 pub type Cw721Contract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
@@ -72,15 +72,18 @@ pub fn execute_register(
 
     let msg = Cw721ExecuteMsg::Mint(
         Cw721MintMsg {
-            token_id: name,
+            token_id: name.clone(),
             owner: info.sender.to_string(),
             token_uri: None,
             extension: None
         }
     );
 
+    let info = MessageInfo { sender: env.contract.address.clone(), funds: info.funds};
+
     match Cw721Contract::default().execute(deps, env, info, msg) {
         Ok(res) => Ok(res),
+        Err(Cw721ContractError::Claimed {  }) =>  Err(ContractError::NameTaken { name }),
         Err(e) => Err(ContractError::Cw721ContractError(e))
     }
 }
@@ -98,10 +101,28 @@ pub fn execute_transfer(
     name = sanitize_name(name);
     
     let new_owner = deps.api.addr_validate(&to)?;
+    
+    let owner = match Cw721Contract::default().owner_of(deps.as_ref(), env.clone(), name.clone(), false) {
+        Ok(res) => res,
+        Err(e) => {
+            match e {
+                StdError::NotFound { kind: _ } => return Err(ContractError::NameNotExists { name: name }),
+                e => return Err(ContractError::Std(e))
+            }
+        }
+    };
+    
+    let owner_addr = deps.api.addr_validate(owner.owner.as_str())?;
 
-    let msg = Cw721ExecuteMsg::TransferNft { recipient: new_owner.to_string(), token_id: name };
-
-    Ok(Cw721Contract::default().execute(deps, env, info, msg)?)
+    if info.sender == owner_addr {
+        let msg = Cw721ExecuteMsg::TransferNft { recipient: new_owner.to_string(), token_id: name.clone() };
+        match Cw721Contract::default().execute(deps, env, info, msg) {
+            Ok(res) => Ok(res),
+            Err(e) =>  Err(ContractError::Cw721ContractError(e))
+        }
+    } else {
+        Err(ContractError::Unauthorized {  })
+    }
 }
 
 fn execute_send_tokens(

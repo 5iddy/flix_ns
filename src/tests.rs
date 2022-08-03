@@ -1,12 +1,13 @@
 #[cfg(test)]
 mod tests {
     use cosmwasm_std::testing::{ mock_dependencies, mock_env, mock_info };
-    use cosmwasm_std::{ coin, coins, from_binary, Coin, Deps, DepsMut };
+    use cosmwasm_std::{ coin, coins, from_binary, Coin, Deps, DepsMut};
 
     use crate::contract::{execute, instantiate, query};
     use crate::error::ContractError;
     use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
     use crate::state::Config;
+
 
     fn assert_name_owner(deps: Deps, name: &str, owner: &str) {
         let res = query(
@@ -33,7 +34,6 @@ mod tests {
         let msg = InstantiateMsg {
             purchase_price: Some(purchase_price),
             transfer_price: Some(transfer_price),
-            code_id: 1
         };
 
         let info = mock_info("creator", &coins(2, "token"));
@@ -46,7 +46,6 @@ mod tests {
         let msg = InstantiateMsg {
             purchase_price: None,
             transfer_price: None,
-            code_id: 1
         };
 
         let info = mock_info("creator", &coins(2, "token"));

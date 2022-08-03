@@ -1,9 +1,9 @@
 {
     "send_tokens": {
-        "name": $name,
+        "name": "sid",
         "amount": [{
-            "denom": $denom,
-            "amount": $amount
+            "amount": "100000",
+            "denom": "ujunox"
         }]
     }
 }
