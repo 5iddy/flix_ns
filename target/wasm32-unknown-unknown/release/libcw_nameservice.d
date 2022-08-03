@@ -1,1 +1,0 @@
-/home/noodles/workspace/flix_ns/target/wasm32-unknown-unknown/release/libcw_nameservice.rlib: /home/noodles/workspace/flix_ns/src/coin_helpers.rs /home/noodles/workspace/flix_ns/src/contract.rs /home/noodles/workspace/flix_ns/src/error.rs /home/noodles/workspace/flix_ns/src/lib.rs /home/noodles/workspace/flix_ns/src/msg.rs /home/noodles/workspace/flix_ns/src/state.rs
