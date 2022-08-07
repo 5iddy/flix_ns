@@ -24,12 +24,7 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    let config = Config {
-        purchase_price: msg.purchase_price,
-        transfer_price: msg.transfer_price,
-    };
-
-    CONFIG.save(deps.storage, &config)?;
+    CONFIG.save(deps.storage, &Config::new(&msg, info.sender.clone()))?;
 
     let init_msg = Cw721InstantiateMsg {
         name: "Flix Name Service NFT".to_string(),
@@ -68,7 +63,7 @@ pub fn execute_register(
     // we only need to check here - at point of registration
     validate_name(&name)?;
     let config = CONFIG.load(deps.storage)?;
-    assert_sent_sufficient_coin(&info.funds, config.purchase_price)?;
+    assert_sent_sufficient_coin(&info.funds, Some(config.purchase_price))?;
 
     let msg = Cw721ExecuteMsg::Mint(
         Cw721MintMsg {
@@ -96,7 +91,7 @@ pub fn execute_transfer(
     to: String,
 ) -> Result<Response, ContractError> {
     let config_state = CONFIG.load(deps.storage)?;
-    assert_sent_sufficient_coin(&info.funds, config_state.transfer_price)?;
+    assert_sent_sufficient_coin(&info.funds, Some(config_state.transfer_price))?;
     
     name = sanitize_name(name);
     

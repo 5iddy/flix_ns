@@ -1,9 +1,9 @@
 [package]
 name = "cw-nameservice"
 description = "Flix name service"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Siddhu Yeturi <siddhuyeturi@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/5iddy/flix_ns"
 
