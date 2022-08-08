@@ -1,5 +1,5 @@
 [package]
-name = "cw-nameservice"
+name = "flix_ns"
 description = "Flix name service"
 version = "0.4.1"
 authors = ["Siddhu Yeturi <siddhuyeturi@gmail.com>"]
