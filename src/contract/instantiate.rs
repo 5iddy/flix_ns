@@ -42,8 +42,8 @@ mod tests {
         assert_config_state(
             deps.as_ref(),
             Config {
-                purchase_price: None,
-                transfer_price: None,
+                purchase_price: coin(100, "ujunox"),
+                transfer_price: coin(100, "ujunox"),
             },
         );
     }
@@ -57,8 +57,8 @@ mod tests {
         assert_config_state(
             deps.as_ref(),
             Config {
-                purchase_price: Some(coin(3, "token")),
-                transfer_price: Some(coin(4, "token")),
+                purchase_price: coin(3, "token"),
+                transfer_price: coin(4, "token"),
             },
         );
     }

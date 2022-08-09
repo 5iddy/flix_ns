@@ -1,11 +1,17 @@
+use crate::config::{MAX_NAME_LENGTH, MIN_NAME_LENGTH, SUFFIX};
 use crate::error::ContractError;
-use crate::config::{SUFFIX, MIN_NAME_LENGTH, MAX_NAME_LENGTH};
+use crate::Cw721Query;
+use crate::Cw721Contract;
+use cosmwasm_std::{Addr, DepsMut, Env};
 
 
-// Sanitize name 
+// Sanitize name
 pub fn sanitize_name(name: String) -> String {
     if name.ends_with(&SUFFIX) {
-        name.strip_suffix(&SUFFIX).unwrap().to_string().to_lowercase()
+        name.strip_suffix(&SUFFIX)
+            .unwrap()
+            .to_string()
+            .to_lowercase()
     } else {
         name.to_lowercase()
     }
@@ -13,7 +19,7 @@ pub fn sanitize_name(name: String) -> String {
 
 // let's not import a regexp library and just do these checks by hand
 fn is_invalid_char(c: char) -> bool {
-    let is_valid = c.is_digit(10) || c.is_ascii_lowercase() || (c == '_') ;
+    let is_valid = c.is_digit(10) || c.is_ascii_lowercase() || (c == '_');
     !is_valid
 }
 
@@ -39,5 +45,17 @@ pub fn validate_name(name: &str) -> Result<(), ContractError> {
                 Err(ContractError::InvalidCharacter { c })
             }
         }
+    }
+}
+
+pub fn verified_name_owner(deps: &DepsMut, env: Env, name: String) -> Result<Addr, ContractError> {
+    let owner = match Cw721Contract::default().owner_of(deps.as_ref(), env, name.clone(), false) {
+        Ok(res) => res.owner,
+        Err(_) => return Err(ContractError::NameNotExists { name }),
+    };
+
+    match deps.api.addr_validate(&owner) {
+        Ok(owner) => Ok(owner),
+        Err(e) => Err(ContractError::Std(e)),
     }
 }

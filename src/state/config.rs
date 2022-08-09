@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{Coin, coin};
+use cosmwasm_std::{coin, Coin};
 
 use crate::InstantiateMsg;
 
@@ -13,27 +13,26 @@ pub struct Config {
 
 impl From<InstantiateMsg> for Config {
     fn from(msg: InstantiateMsg) -> Self {
-        if msg.purchase_price.is_some() && msg.transfer_price.is_some(){
+        if msg.purchase_price.is_some() && msg.transfer_price.is_some() {
             Config {
                 purchase_price: msg.purchase_price.unwrap(),
-                transfer_price: msg.transfer_price.unwrap()
+                transfer_price: msg.transfer_price.unwrap(),
             }
         } else if msg.purchase_price.is_some() && msg.transfer_price.is_none() {
             Config {
                 purchase_price: msg.clone().purchase_price.unwrap(),
-                transfer_price: msg.purchase_price.unwrap()
+                transfer_price: msg.purchase_price.unwrap(),
             }
         } else if msg.purchase_price.is_none() && msg.transfer_price.is_some() {
             Config {
                 purchase_price: msg.clone().transfer_price.unwrap(),
-                transfer_price: msg.transfer_price.unwrap()
+                transfer_price: msg.transfer_price.unwrap(),
             }
         } else {
             Config {
                 purchase_price: coin(100, "ujunox"),
-                transfer_price: coin(100, "ujunox")
-            }   
+                transfer_price: coin(100, "ujunox"),
+            }
         }
     }
 }
-

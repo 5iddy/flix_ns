@@ -1,4 +1,4 @@
-use cosmwasm_std::{Coin, Ex};
+use cosmwasm_std::Coin;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use cw721::Expiration;

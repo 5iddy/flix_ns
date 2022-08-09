@@ -1,8 +1,8 @@
-use cosmwasm_std::testing::{ mock_env, mock_info };
-use cosmwasm_std::{ coins, from_binary, Coin, Deps, DepsMut};
-use crate::contract::{execute, instantiate, query};
-use crate::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
 use crate::state::Config;
+use cosmwasm_std::testing::{mock_env, mock_info};
+use cosmwasm_std::{coins, from_binary, Coin, Deps, DepsMut};
+use crate::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
+use crate::{execute, instantiate, query};
 
 pub fn assert_name_owner(deps: Deps, name: &str, owner: &str) {
     let res = query(
@@ -47,7 +47,6 @@ pub fn mock_init_no_price(deps: DepsMut) {
     let _res = instantiate(deps, mock_env(), info, msg)
         .expect("contract successfully handles InstantiateMsg");
 }
-
 
 pub fn mock_register_name(deps: DepsMut, key: &str, name: &str, sent: &[Coin]) {
     // alice can register an available name

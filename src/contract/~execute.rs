@@ -7,27 +7,10 @@ use crate::msg::ExecuteMsg;
 use crate::Cw721Query;
 use crate::{Cw721Contract, Cw721ContractError, Cw721ExecuteMsg, Cw721MintMsg};
 use cosmwasm_std::{
-    entry_point, BankMsg, Coin, Deps, DepsMut, Env, MessageInfo, Response, StdError, Addr,
+    entry_point, BankMsg, Coin, Deps, DepsMut, Env, MessageInfo, Response, Addr,
 };
 use cw721::Expiration;
 
-#[entry_point]
-pub fn execute(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
-    match msg {
-        ExecuteMsg::Register { name } => register_name_nft(deps, env, info, name),
-        ExecuteMsg::TransferName { name, to } => transfer_name_nft(deps, env, info, name, to),
-        ExecuteMsg::SendTokens { name, amount } => {
-            send_tokens_to_named_wallet(deps.as_ref(), env, info, name, amount)
-        }
-        ExecuteMsg::Burn { name } => burn_name_nft(deps, env, info, name),
-        ExecuteMsg::Approve { spender, name, expires } => approve_spender_for_name(deps, env, info, spender, name, expires)
-    }
-}
 
 /// Function that handles the registeration of a name for a wallet
 /// Also mints the name as an cw721 compatible NFT with Empty Metadata Extention
@@ -78,7 +61,7 @@ fn transfer_name_nft(
 
     let new_owner = deps.api.addr_validate(&to)?;
 
-    let owner = verified_name_owner(deps, env, name)?;
+    let owner = verified_name_owner(&deps, env.clone(), name.clone())?;
 
     if info.sender == owner {
         let msg = Cw721ExecuteMsg::TransferNft {
@@ -128,6 +111,7 @@ fn send_tokens_to_named_wallet(
     }
 }
 
+
 /// Delete Name or NFT
 fn burn_name_nft(
     deps: DepsMut,
@@ -136,7 +120,7 @@ fn burn_name_nft(
     mut name: String,
 ) -> Result<Response, ContractError> {
     name = sanitize_name(name);
-    let onwer = verified_name_owner(deps, env, name)?;
+    let owner = verified_name_owner(&deps, env.clone(), name.clone())?;
     if info.sender == owner {
         let message = Cw721ExecuteMsg::Burn { token_id: name };
         match Cw721Contract::default().execute(deps, env, info, message) {
@@ -149,7 +133,7 @@ fn burn_name_nft(
 }
 
 fn approve_spender_for_name(deps: DepsMut, env: Env, info: MessageInfo, spender: String, name: String, expires: Option<Expiration>) -> Result<Response, ContractError> {
-    let owner = verified_name_owner(deps, env.clone(), name)?;
+    let owner = verified_name_owner(&deps, env.clone(), name.clone())?;
     if info.sender == owner {
         let msg = Cw721ExecuteMsg::Approve { spender, token_id: name, expires };
         match Cw721Contract::default()
@@ -163,7 +147,7 @@ fn approve_spender_for_name(deps: DepsMut, env: Env, info: MessageInfo, spender:
 }
 
 fn revoke_spender_for_name(deps: DepsMut, env: Env, info: MessageInfo, spender: String, name: String) -> Result<Response, ContractError> {
-    let owner = verified_name_owner(deps, env.clone(), name)?;
+    let owner = verified_name_owner(&deps, env.clone(), name.clone())?;
     if info.sender == owner {
         let msg = Cw721ExecuteMsg::Revoke { spender, token_id: name };
         match Cw721Contract::default()
@@ -176,11 +160,11 @@ fn revoke_spender_for_name(deps: DepsMut, env: Env, info: MessageInfo, spender: 
     }
 }
 
-fn verified_name_owner(deps: DepsMut, env: Env, name: String) -> Result<Addr, ContractError> {
+fn verified_name_owner(deps: &DepsMut, env: Env, name: String) -> Result<Addr, ContractError> {
     let owner = match Cw721Contract::default()
-        .owner_of(deps.as_ref(), env, name, false){
+        .owner_of(deps.as_ref(), env, name.clone(), false){
             Ok(res) => res.owner,
-            Err(_) => return Err(ContractError::NameNotExists { name: () }) 
+            Err(_) => return Err(ContractError::NameNotExists { name }) 
         };
     
     match deps.api.addr_validate(&owner) {
@@ -490,6 +474,8 @@ mod tests {
             Err(e) => panic!("Unxpected an error: {:#?}", e),
         };
     }
+
+    
 
     #[test]
     fn burn_name_nft() {
