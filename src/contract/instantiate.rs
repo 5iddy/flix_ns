@@ -11,7 +11,7 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    CONFIG.save(deps.storage, &msg.into());
+    CONFIG.save(deps.storage, &msg.into())?;
 
     let init_msg = Cw721InstantiateMsg {
         name: "Flix Name Service NFT".to_string(),

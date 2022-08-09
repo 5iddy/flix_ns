@@ -91,7 +91,7 @@ mod tests {
         mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(150, "ujunox"));
 
         // bob can't register the same name
-        let info = mock_info("bob_key", &coins(2, "token"));
+        let info = mock_info("bob_key", &coins(150, "ujunox"));
         let msg = ExecuteMsg::Register {
             name: "alice.flix".to_string(),
         };
@@ -100,10 +100,10 @@ mod tests {
         match res {
             Ok(_) => panic!("Must return error"),
             Err(ContractError::NameTaken { .. }) => {}
-            Err(_) => panic!("Unknown error"),
+            Err(e) => panic!("Unknown error: {}", e),
         }
         // alice can't register the same name again
-        let info = mock_info("alice_key", &coins(2, "token"));
+        let info = mock_info("alice_key", &coins(150, "ujunox"));
         let msg = ExecuteMsg::Register {
             name: "alice".to_string(),
         };
@@ -142,15 +142,6 @@ mod tests {
             Err(_) => panic!("Unknown error"),
         }
 
-        // no upper case...
-        let msg = ExecuteMsg::Register {
-            name: "LOUD".to_string(),
-        };
-        match execute(deps.as_mut(), mock_env(), info.clone(), msg) {
-            Ok(_) => panic!("Must return error"),
-            Err(ContractError::InvalidCharacter { c }) => assert_eq!(c, 'L'),
-            Err(_) => panic!("Unknown error"),
-        }
         // ... or spaces
         let msg = ExecuteMsg::Register {
             name: "two words".to_string(),

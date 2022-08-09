@@ -47,9 +47,3 @@ pub type Extension = Option<Empty>;
 use cw721_base::MintMsg; pub type Cw721MintMsg = MintMsg<Extension>;
 pub type Cw721Contract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
 pub type Cw721ExecuteMsg = cw721_base::ExecuteMsg<Extension>;
-
-
-/// ## Contract Tests
-#[cfg(test)]
-mod tests;
-

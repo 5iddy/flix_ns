@@ -139,7 +139,7 @@ mod tests {
     fn fails_on_transfer_insufficient_fees() {
         let mut deps = mock_dependencies();
         mock_init_with_price(deps.as_mut(), coin(2, "token"), coin(5, "token"));
-        mock_alice_registers_name(deps.as_mut(), &coins(2, "token"));
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &[coin(2, "token")]);
     
         // alice can transfer her name successfully to bob
         let info = mock_info("alice_key", &[coin(1, "earth"), coin(2, "token")]);

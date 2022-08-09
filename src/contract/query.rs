@@ -43,7 +43,7 @@ mod tests {
     use cosmwasm_std::{coin, coins, from_binary};
     use cosmwasm_std::testing::{mock_dependencies, mock_env};
 
-    use crate::helpers::testing::{assert_config_state, mock_init_no_price, mock_init_with_price, mock_register_name};
+    use crate::helpers::testing::{mock_init_no_price, mock_init_with_price, mock_register_name};
     use crate::{
         query,
         QueryMsg,

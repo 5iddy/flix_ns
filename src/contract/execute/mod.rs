@@ -8,6 +8,18 @@ use register::register_name_nft;
 mod transfer;
 use transfer::transfer_name_nft;
 
+mod send_tokens;
+use send_tokens::send_tokens_to_named_wallet;
+
+mod burn;
+use burn::burn_name_nft;
+
+mod approve;
+use approve::approve_spender_for_name;
+
+mod revoke;
+use revoke::revoke_spender_for_name;
+
 #[entry_point]
 pub fn execute(
     deps: DepsMut,
