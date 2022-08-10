@@ -2,12 +2,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ResolveRecordResponse",
   "type": "object",
+  "required": [
+    "name"
+  ],
   "properties": {
     "address": {
       "type": [
         "string",
         "null"
       ]
+    },
+    "name": {
+      "type": "string"
     }
   }
 }

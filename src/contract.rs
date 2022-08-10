@@ -1,11 +1,11 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult,
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
 };
 
 use crate::coin_helpers::assert_sent_sufficient_coin;
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
-use crate::state::{config, config_read, resolver, resolver_read, Config, NameRecord};
+use crate::state::{Config, NameRecord, CONFIG, NAME_RECORDS, SUFFIX};
 
 const MIN_NAME_LENGTH: u64 = 3;
 const MAX_NAME_LENGTH: u64 = 64;
@@ -16,13 +16,13 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     msg: InstantiateMsg,
-) -> Result<Response, StdError> {
+) -> Result<Response, ContractError> {
     let config_state = Config {
         purchase_price: msg.purchase_price,
         transfer_price: msg.transfer_price,
     };
 
-    config(deps.storage).save(&config_state)?;
+    CONFIG.save(deps.storage, &config_state)?;
 
     Ok(Response::default())
 }
@@ -44,23 +44,26 @@ pub fn execute_register(
     deps: DepsMut,
     _env: Env,
     info: MessageInfo,
-    name: String,
+    mut name: String,
 ) -> Result<Response, ContractError> {
     // we only need to check here - at point of registration
+    if name.ends_with(&SUFFIX) {
+        name = name.strip_suffix(&SUFFIX).unwrap().to_owned();
+    }
+
     validate_name(&name)?;
-    let config_state = config(deps.storage).load()?;
+    let config_state = CONFIG.load(deps.storage)?;
     assert_sent_sufficient_coin(&info.funds, config_state.purchase_price)?;
 
-    let key = name.strip_suffix(".flix").unwrap().as_bytes();
     let record = NameRecord { owner: info.sender };
 
-    if (resolver(deps.storage).may_load(key)?).is_some() {
+    if (NAME_RECORDS.may_load(deps.storage, &name)?).is_some() {
         // name is already taken
         return Err(ContractError::NameTaken { name });
     }
 
     // name is available
-    resolver(deps.storage).save(key, &record)?;
+    NAME_RECORDS.save(deps.storage, &name, &record)?;
 
     Ok(Response::default())
 }
@@ -72,12 +75,12 @@ pub fn execute_transfer(
     name: String,
     to: String,
 ) -> Result<Response, ContractError> {
-    let config_state = config(deps.storage).load()?;
+    let config_state = CONFIG.load(deps.storage)?;
     assert_sent_sufficient_coin(&info.funds, config_state.transfer_price)?;
 
     let new_owner = deps.api.addr_validate(&to)?;
-    let key = name.strip_suffix(".flix").unwrap().as_bytes();
-    resolver(deps.storage).update(key, |record| {
+
+    NAME_RECORDS.update(deps.storage, &name, |record| {
         if let Some(mut record) = record {
             if info.sender != record.owner {
                 return Err(ContractError::Unauthorized {});
@@ -89,25 +92,29 @@ pub fn execute_transfer(
             Err(ContractError::NameNotExists { name: name.clone() })
         }
     })?;
+
     Ok(Response::default())
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::ResolveRecord { name } => query_resolver(deps, env, name),
-        QueryMsg::Config {} => to_binary(&config_read(deps.storage).load()?),
+        QueryMsg::ResolveRecord { mut name } => {
+            if name.ends_with(&SUFFIX) {
+                name = name.strip_suffix(&SUFFIX).unwrap().to_string();
+            }
+            query_resolver(deps, env, name)
+        },
+        QueryMsg::Config {} => to_binary(&CONFIG.load(deps.storage)?),
     }
 }
 
 fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
-    let key = name.strip_suffix(".flix").unwrap().as_bytes();
-
-    let address = match resolver_read(deps.storage).may_load(key)? {
+    let address = match NAME_RECORDS.may_load(deps.storage, &name)? {
         Some(record) => Some(String::from(&record.owner)),
         None => None,
     };
-    let resp = ResolveRecordResponse { address };
+    let resp = ResolveRecordResponse { name, address };
 
     to_binary(&resp)
 }
@@ -134,13 +141,7 @@ fn validate_name(name: &str) -> Result<(), ContractError> {
         })
     } else {
         match name.find(invalid_char) {
-            None => {
-                if name.ends_with(".flix") {
-                    Ok(())
-                } else {
-                    Err(ContractError::InvalidSuffix { name: name.to_string()})
-                }
-            },
+            None => Ok(()),
             Some(bytepos_invalid_char_start) => {
                 let c = name[bytepos_invalid_char_start..].chars().next().unwrap();
                 Err(ContractError::InvalidCharacter { c })
