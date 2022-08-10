@@ -1,33 +1,49 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Coin, BankMsg, Addr, AllBalanceResponse
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Coin, BankMsg, AllBalanceResponse, Empty, StdError
 };
+use cw721::Cw721Query;
 
 use crate::coin_helpers::{assert_sent_sufficient_coin, assert_sent_sufficient_coins};
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
-use crate::state::{Config, NameRecord, CONFIG, NAME_RECORDS, SUFFIX};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse, Extension};
+use crate::state::{Config, CONFIG, SUFFIX};
+
+use cw721_base::{InstantiateMsg as Cw721InstantiateMsg, MintMsg, ContractError as Cw721ContractError};
+
+pub type Cw721MintMsg = MintMsg<Extension>;
+pub type Cw721Contract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
+pub type Cw721ExecuteMsg = cw721_base::ExecuteMsg<Extension>;
 
 const MIN_NAME_LENGTH: u64 = 3;
 const MAX_NAME_LENGTH: u64 = 64;
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn instantiate(
     deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    let config_state = Config {
+    let config = Config {
         purchase_price: msg.purchase_price,
         transfer_price: msg.transfer_price,
     };
 
-    CONFIG.save(deps.storage, &config_state)?;
+    CONFIG.save(deps.storage, &config)?;
 
-    Ok(Response::default())
+    let init_msg = Cw721InstantiateMsg {
+        name: "Flix Name Service NFT".to_string(),
+        symbol: "FLIXNS".to_string(),
+        minter: env.contract.address.to_string(),
+    };
+
+    match Cw721Contract::default().instantiate(deps, env, info, init_msg) {
+        Ok(res) => Ok(res),
+        Err(e) => Err(ContractError::Std(e))
+    }
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn execute(
     deps: DepsMut,
     env: Env,
@@ -37,13 +53,13 @@ pub fn execute(
     match msg {
         ExecuteMsg::Register { name } => execute_register(deps, env, info, name),
         ExecuteMsg::TransferName { name, to } => execute_transfer(deps, env, info, name, to),
-        ExecuteMsg::SendTokens { name, amount } => execute_send_tokens(deps, env, info, name, amount)
+        ExecuteMsg::SendTokens { name, amount } => execute_send_tokens(deps.as_ref(), env, info, name, amount)
     }
 }
 
 pub fn execute_register(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     mut name: String,
 ) -> Result<Response, ContractError> {
@@ -51,25 +67,30 @@ pub fn execute_register(
     
     // we only need to check here - at point of registration
     validate_name(&name)?;
-    let config_state = CONFIG.load(deps.storage)?;
-    assert_sent_sufficient_coin(&info.funds, config_state.purchase_price)?;
+    let config = CONFIG.load(deps.storage)?;
+    assert_sent_sufficient_coin(&info.funds, config.purchase_price)?;
 
-    let record = NameRecord { owner: info.sender };
+    let msg = Cw721ExecuteMsg::Mint(
+        Cw721MintMsg {
+            token_id: name.clone(),
+            owner: info.sender.to_string(),
+            token_uri: None,
+            extension: None
+        }
+    );
 
-    if (NAME_RECORDS.may_load(deps.storage, &name)?).is_some() {
-        // name is already taken
-        return Err(ContractError::NameTaken { name });
+    let info = MessageInfo { sender: env.contract.address.clone(), funds: info.funds};
+
+    match Cw721Contract::default().execute(deps, env, info, msg) {
+        Ok(res) => Ok(res),
+        Err(Cw721ContractError::Claimed {  }) =>  Err(ContractError::NameTaken { name }),
+        Err(e) => Err(ContractError::Cw721ContractError(e))
     }
-
-    // name is available
-    NAME_RECORDS.save(deps.storage, &name, &record)?;
-
-    Ok(Response::default())
 }
 
 pub fn execute_transfer(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     mut name: String,
     to: String,
@@ -80,26 +101,33 @@ pub fn execute_transfer(
     name = sanitize_name(name);
     
     let new_owner = deps.api.addr_validate(&to)?;
-
-    NAME_RECORDS.update(deps.storage, &name, |record| {
-        if let Some(mut record) = record {
-            if info.sender != record.owner {
-                return Err(ContractError::Unauthorized {});
+    
+    let owner = match Cw721Contract::default().owner_of(deps.as_ref(), env.clone(), name.clone(), false) {
+        Ok(res) => res,
+        Err(e) => {
+            match e {
+                StdError::NotFound { kind: _ } => return Err(ContractError::NameNotExists { name: name }),
+                e => return Err(ContractError::Std(e))
             }
-
-            record.owner = new_owner.clone();
-            Ok(record)
-        } else {
-            Err(ContractError::NameNotExists { name: name.clone() })
         }
-    })?;
+    };
+    
+    let owner_addr = deps.api.addr_validate(owner.owner.as_str())?;
 
-    Ok(Response::default())
+    if info.sender == owner_addr {
+        let msg = Cw721ExecuteMsg::TransferNft { recipient: new_owner.to_string(), token_id: name.clone() };
+        match Cw721Contract::default().execute(deps, env, info, msg) {
+            Ok(res) => Ok(res),
+            Err(e) =>  Err(ContractError::Cw721ContractError(e))
+        }
+    } else {
+        Err(ContractError::Unauthorized {  })
+    }
 }
 
 fn execute_send_tokens(
-    deps: DepsMut,
-    _env: Env,
+    deps: Deps,
+    env: Env,
     info: MessageInfo,
     mut name: String,
     amount: Vec<Coin>
@@ -108,11 +136,7 @@ fn execute_send_tokens(
 
     assert_sent_sufficient_coins(&info.funds, &amount)?;
 
-    let to_address: Addr = if let Some(record) = NAME_RECORDS.may_load(deps.storage, &name)? {
-        record.owner
-    } else {
-        return Err(ContractError::NameNotExists { name });
-    };
+    let to_address = deps.api.addr_validate(Cw721Contract::default().owner_of(deps, env, name, false)?.owner.as_str())?;
 
     if info.sender == to_address {
         Err(ContractError::InvalidToAddress { to_address: to_address.to_string() })
@@ -132,7 +156,7 @@ fn execute_send_tokens(
     }
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::ResolveRecord { mut name } => {
@@ -140,28 +164,28 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
             query_resolver(deps, env, name)
         },
         QueryMsg::Config {} => to_binary(&CONFIG.load(deps.storage)?),
-        QueryMsg::QueryBalance { name } => query_balance(deps, name)
+        QueryMsg::QueryBalance { name } => query_balance(deps, env, name)
     }
 }
 
-fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
-    let address = match NAME_RECORDS.may_load(deps.storage, &name)? {
-        Some(record) => Some(String::from(&record.owner)),
-        None => None,
+fn query_resolver(deps: Deps, env: Env, name: String) -> StdResult<Binary> {
+    let address: Option<String> = match Cw721Contract::default().owner_of(deps, env, name.to_owned(), false) {
+        Ok(res) => Some(res.owner),
+        Err(_) => None
     };
     let resp = ResolveRecordResponse { name, address };
-
     to_binary(&resp)
 }
 
-fn query_balance(deps: Deps, mut name:String) -> StdResult<Binary>{
+fn query_balance(deps: Deps, env: Env, mut name:String) -> StdResult<Binary>{
     name = sanitize_name(name);
-    let address = match NAME_RECORDS.may_load(deps.storage, &name)? {
-        Some(record) => Some(String::from(&record.owner)),
-        None => None,
-    };
-    let amount = deps.querier.query_all_balances(address.unwrap())?;
-    to_binary(&AllBalanceResponse{amount})
+    match Cw721Contract::default().owner_of(deps, env, name, false) {
+        Ok(record) => {
+            let amount = deps.querier.query_all_balances(record.owner)?;
+            to_binary(&AllBalanceResponse{amount})
+        },
+        Err(e) => Err(e),
+    }
 }
 
 // Sanitize name 

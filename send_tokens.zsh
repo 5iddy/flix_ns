@@ -13,7 +13,7 @@ CODE_ID=$(echo $INFO | jq -r '.code_id')
 CONTRACT_ADDR=$(echo $INFO | jq -r '.contract_address')
 echo $MSG
 echo $CODE_ID
-
+echo $AMOUNT
 echo $WALLET
 RES=$(junod tx wasm execute $CONTRACT_ADDR $MSG --from $WALLET --amount "${AMOUNT}" --gas-prices 0.1ujunox --gas auto --gas-adjustment 1.3 -b block --trace -o json)
 echo $RES

@@ -1,8 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ExecuteMsg",
-  "anyOf": [
+  "oneOf": [
     {
+      "description": "Register a name for a wallet",
       "type": "object",
       "required": [
         "register"
@@ -23,6 +24,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Transfer the ownership to a different wallet",
       "type": "object",
       "required": [
         "transfer_name"
@@ -47,6 +49,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Send tokens to aa wallet based on their name",
       "type": "object",
       "required": [
         "send_tokens"

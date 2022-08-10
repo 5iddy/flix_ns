@@ -1,4 +1,5 @@
-/target
+packages/*/target
+target/
 **/*.rs.bk
 *.iml
 .idea
