@@ -1,8 +1,8 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Coin, BankMsg, Addr, AllBalanceResponse
 };
 
-use crate::coin_helpers::assert_sent_sufficient_coin;
+use crate::coin_helpers::{assert_sent_sufficient_coin, assert_sent_sufficient_coins};
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
 use crate::state::{Config, NameRecord, CONFIG, NAME_RECORDS, SUFFIX};
@@ -36,7 +36,8 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Register { name } => execute_register(deps, env, info, name),
-        ExecuteMsg::Transfer { name, to } => execute_transfer(deps, env, info, name, to),
+        ExecuteMsg::TransferName { name, to } => execute_transfer(deps, env, info, name, to),
+        ExecuteMsg::SendTokens { name, amount } => execute_send_tokens(deps, env, info, name, amount)
     }
 }
 
@@ -46,11 +47,9 @@ pub fn execute_register(
     info: MessageInfo,
     mut name: String,
 ) -> Result<Response, ContractError> {
+    name = sanitize_name(name);
+    
     // we only need to check here - at point of registration
-    if name.ends_with(&SUFFIX) {
-        name = name.strip_suffix(&SUFFIX).unwrap().to_owned();
-    }
-
     validate_name(&name)?;
     let config_state = CONFIG.load(deps.storage)?;
     assert_sent_sufficient_coin(&info.funds, config_state.purchase_price)?;
@@ -72,12 +71,14 @@ pub fn execute_transfer(
     deps: DepsMut,
     _env: Env,
     info: MessageInfo,
-    name: String,
+    mut name: String,
     to: String,
 ) -> Result<Response, ContractError> {
     let config_state = CONFIG.load(deps.storage)?;
     assert_sent_sufficient_coin(&info.funds, config_state.transfer_price)?;
-
+    
+    name = sanitize_name(name);
+    
     let new_owner = deps.api.addr_validate(&to)?;
 
     NAME_RECORDS.update(deps.storage, &name, |record| {
@@ -96,16 +97,50 @@ pub fn execute_transfer(
     Ok(Response::default())
 }
 
+fn execute_send_tokens(
+    deps: DepsMut,
+    _env: Env,
+    info: MessageInfo,
+    mut name: String,
+    amount: Vec<Coin>
+) -> Result<Response, ContractError>{
+    name = sanitize_name(name);
+
+    assert_sent_sufficient_coins(&info.funds, &amount)?;
+
+    let to_address: Addr = if let Some(record) = NAME_RECORDS.may_load(deps.storage, &name)? {
+        record.owner
+    } else {
+        return Err(ContractError::NameNotExists { name });
+    };
+
+    if info.sender == to_address {
+        Err(ContractError::InvalidToAddress { to_address: to_address.to_string() })
+    } else {
+        Ok(
+            Response::new()
+                .add_attribute("action", "send_tokens")
+                .add_attribute("from", &info.sender)
+                .add_attribute("to", &to_address)
+                .add_message(
+                    BankMsg::Send { 
+                        to_address: to_address.to_string(), 
+                        amount
+                    }
+                )
+        )
+    }
+}
+
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::ResolveRecord { mut name } => {
-            if name.ends_with(&SUFFIX) {
-                name = name.strip_suffix(&SUFFIX).unwrap().to_string();
-            }
+            name = sanitize_name(name);
             query_resolver(deps, env, name)
         },
         QueryMsg::Config {} => to_binary(&CONFIG.load(deps.storage)?),
+        QueryMsg::QueryBalance { name } => query_balance(deps, name)
     }
 }
 
@@ -117,6 +152,25 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
     let resp = ResolveRecordResponse { name, address };
 
     to_binary(&resp)
+}
+
+fn query_balance(deps: Deps, mut name:String) -> StdResult<Binary>{
+    name = sanitize_name(name);
+    let address = match NAME_RECORDS.may_load(deps.storage, &name)? {
+        Some(record) => Some(String::from(&record.owner)),
+        None => None,
+    };
+    let amount = deps.querier.query_all_balances(address.unwrap())?;
+    to_binary(&AllBalanceResponse{amount})
+}
+
+// Sanitize name 
+fn sanitize_name(name: String) -> String {
+    if name.ends_with(&SUFFIX) {
+        name.strip_suffix(&SUFFIX).unwrap().to_string()
+    } else {
+        name
+    }
 }
 
 // let's not import a regexp library and just do these checks by hand

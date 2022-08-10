@@ -10,7 +10,7 @@ pub enum ContractError {
     Unauthorized {},
 
     #[error("Insufficient funds sent")]
-    InsufficientFundsSend {},
+    InsufficientFundsSent {},
 
     #[error("Name does not exist (name {name})")]
     NameNotExists { name: String },
@@ -26,4 +26,7 @@ pub enum ContractError {
 
     #[error("Invalid character (char {c}) -> Name can only lower case alphabets, numbers, '.', '-' and '_'")]
     InvalidCharacter { c: char },
+
+    #[error("Cannot send tokens to self. {to_address}")]
+    InvalidToAddress { to_address: String }
 }
