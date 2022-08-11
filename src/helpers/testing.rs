@@ -29,6 +29,8 @@ pub fn mock_init_with_price(deps: DepsMut, purchase_price: Coin, transfer_price:
     let msg = InstantiateMsg {
         purchase_price: Some(purchase_price),
         transfer_price: Some(transfer_price),
+        sale_flag: None,
+        admin: None
     };
 
     let info = mock_info("creator", &coins(2, "token"));
@@ -41,6 +43,8 @@ pub fn mock_init_no_price(deps: DepsMut) {
     let msg = InstantiateMsg {
         purchase_price: None,
         transfer_price: None,
+        sale_flag: None,
+        admin: None
     };
 
     let info = mock_info("creator", &coins(2, "token"));

@@ -54,7 +54,7 @@ mod tests {
         mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(100, "ujunox"));
     
         // alice can transfer her name successfully to bob
-        let info = mock_info("alice_key", &[]);
+        let info = mock_info("alice_key", &coins(100, "ujunox"));
         let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),
@@ -92,7 +92,7 @@ mod tests {
         mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(100, "ujunox"));
 
         // transfer "alice42" to bob fails because alice doenst own "alice42"
-        let info = mock_info("alice_key", &coins(2, "token"));
+        let info = mock_info("alice_key", &coins(100, "ujunox"));
         let msg = ExecuteMsg::TransferName {
             name: "alice42".to_string(),
             to: "bob_key".to_string(),
@@ -102,7 +102,7 @@ mod tests {
 
         match res {
             Ok(_) => panic!("Must return error"),
-            Err(ContractError::NameNotExists { name }) => assert_eq!(name, "alice42"),
+            Err(ContractError::UnregisteredName { name }) => assert_eq!(name, "alice42"),
             Err(e) => panic!("Unexpected error: {:?}", e),
         }
 
@@ -116,8 +116,8 @@ mod tests {
         mock_init_no_price(deps.as_mut());
         mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(100, "ujunox"));
     
-        // alice can transfer her name successfully to bob
-        let info = mock_info("frank_key", &coins(2, "token"));
+        // frank cannot transfer "alice" to bob because frank doesnt own "alice"
+        let info = mock_info("frank_key", &coins(100, "ujunox"));
         let msg = ExecuteMsg::TransferName {
             name: "alice".to_string(),
             to: "bob_key".to_string(),

@@ -2,7 +2,7 @@ use cosmwasm_std::{entry_point, DepsMut, Env, MessageInfo, Response};
 use crate::msg::{InstantiateMsg};
 use crate::error::ContractError;
 use crate::config::CONFIG;
-use crate::{Cw721InstantiateMsg, Cw721Contract};
+use crate::{Cw721InstantiateMsg, Cw721Contract, Config};
 
 #[entry_point]
 pub fn instantiate(
@@ -11,7 +11,8 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    CONFIG.save(deps.storage, &msg.into())?;
+    let config = Config::new(&deps, info.clone(), msg);
+    CONFIG.save(deps.storage, &config)?;
 
     let init_msg = Cw721InstantiateMsg {
         name: "Flix Name Service NFT".to_string(),
@@ -44,6 +45,8 @@ mod tests {
             Config {
                 purchase_price: coin(100, "ujunox"),
                 transfer_price: coin(100, "ujunox"),
+                sale_flag: false,
+                admin: "creator".to_owned()
             },
         );
     }
@@ -59,6 +62,8 @@ mod tests {
             Config {
                 purchase_price: coin(3, "token"),
                 transfer_price: coin(4, "token"),
+                sale_flag: false,
+                admin: "creator".to_owned()
             },
         );
     }

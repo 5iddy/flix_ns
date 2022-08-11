@@ -101,7 +101,12 @@ mod tests {
 
         let config: Config = from_binary(&res).unwrap();
         
-        assert_eq!(config, Config {purchase_price:coin(150, "ujunox"), transfer_price: coin(150, "ujunox")});
+        assert_eq!(config, Config {
+            purchase_price:coin(150, "ujunox"), 
+            transfer_price: coin(150, "ujunox"),
+            sale_flag: false,
+            admin: "creator".to_owned()
+        });
     }
 
 

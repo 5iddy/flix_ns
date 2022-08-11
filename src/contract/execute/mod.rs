@@ -20,6 +20,12 @@ use approve::approve_spender_for_name;
 mod revoke;
 use revoke::revoke_spender_for_name;
 
+mod sale;
+use sale::set_sale_flag;
+
+mod admin;
+use admin::change_admin;
+
 #[entry_point]
 pub fn execute(
     deps: DepsMut,
@@ -41,6 +47,8 @@ pub fn execute(
         } => approve_spender_for_name(deps, env, info, spender, name, expires),
         ExecuteMsg::Revoke { spender, name } => {
             revoke_spender_for_name(deps, env, info, spender, name)
-        }
+        },
+        ExecuteMsg::SetSale { flag } => set_sale_flag(deps, info, flag),
+        ExecuteMsg::ChangeAdmin { admin } => change_admin(deps, env, info, admin)
     }
 }

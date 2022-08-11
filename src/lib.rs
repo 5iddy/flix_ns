@@ -3,7 +3,7 @@
 
 ///  ## Messages
 pub mod msg;
-pub use msg::{
+pub use msg::{  
     InstantiateMsg,
     ExecuteMsg,
     QueryMsg,

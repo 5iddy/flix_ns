@@ -51,7 +51,7 @@ pub fn validate_name(name: &str) -> Result<(), ContractError> {
 pub fn verified_name_owner(deps: &DepsMut, env: Env, name: String) -> Result<Addr, ContractError> {
     let owner = match Cw721Contract::default().owner_of(deps.as_ref(), env, name.clone(), false) {
         Ok(res) => res.owner,
-        Err(_) => return Err(ContractError::NameNotExists { name }),
+        Err(_) => return Err(ContractError::UnregisteredName { name }),
     };
 
     match deps.api.addr_validate(&owner) {

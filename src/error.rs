@@ -30,7 +30,7 @@ pub enum ContractError {
 
     /// Raised when an action encounters access to unregistered or unfound names.
     #[error("Name does not exist (name {name})")]
-    NameNotExists { name: String },
+    UnregisteredName { name: String },
 
     /// Raised when an attempt to register a previously taken name is encountered.
     #[error("Name has been taken (name {name})")]
@@ -53,4 +53,11 @@ pub enum ContractError {
     /// Raised when an attempt to transfer a name to a non-existent account is encountered.
     #[error("Cannot send tokens to self. {to_address}")]
     InvalidToAddress { to_address: String },
+
+    /// When sale_flag is false, the Sale Window is considered to be closed.
+    /// No new registrations can be made if the sale_flag is false.
+    /// This error is raised when a registration is executed while 
+    /// the sale_flag is false.
+    #[error("Sale Window is now closed. sale flag: {flag}")]
+    ClosedSaleWindow { flag: bool }
 }

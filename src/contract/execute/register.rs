@@ -16,30 +16,39 @@ pub fn register_name_nft(
     info: MessageInfo,
     mut name: String,
 ) -> Result<Response, ContractError> {
-    // Sanitize the requested name
-    name = sanitize_name(name);
-
-    // Validate the name, Only alphanumeric characters and a
-    validate_name(&name)?;
+    // Load Config from the chain storage
     let config = CONFIG.load(deps.storage)?;
-    assert_sent_sufficient_coin(&info.funds, Some(config.purchase_price))?;
 
-    let msg = Cw721ExecuteMsg::Mint(Cw721MintMsg {
-        token_id: name.clone(),
-        owner: info.sender.to_string(),
-        token_uri: None,
-        extension: None,
-    });
+    // Check if sale_flag is true, if it is start the registration process
+    if config.sale_flag {
+        // Sanitize the requested name
+        name = sanitize_name(name);
 
-    let info = MessageInfo {
-        sender: env.contract.address.clone(),
-        funds: info.funds,
-    };
+        // Validate the name, Only alphanumeric characters and a
+        validate_name(&name)?;
 
-    match Cw721Contract::default().execute(deps, env, info, msg) {
-        Ok(res) => Ok(res),
-        Err(Cw721ContractError::Claimed {}) => Err(ContractError::NameTaken { name }),
-        Err(e) => Err(ContractError::Cw721ContractError(e)),
+        assert_sent_sufficient_coin(&info.funds, Some(config.purchase_price))?;
+
+        let msg = Cw721ExecuteMsg::Mint(Cw721MintMsg {
+            token_id: name.clone(),
+            owner: info.sender.to_string(),
+            token_uri: None,
+            extension: None,
+        });
+
+        let info = MessageInfo {
+            sender: env.contract.address.clone(),
+            funds: info.funds,
+        };
+
+        match Cw721Contract::default().execute(deps, env, info, msg) {
+            Ok(res) => Ok(res),
+            Err(Cw721ContractError::Claimed {}) => Err(ContractError::NameTaken { name }),
+            Err(e) => Err(ContractError::Cw721ContractError(e)),
+        }
+    } else {
+        // if the sale_flag is false, names cannot be registered.
+        Err(ContractError::ClosedSaleWindow { flag: config.sale_flag })
     }
 }
 
@@ -68,7 +77,7 @@ mod tests {
     fn register_available_name_and_query_works_with_fees() {
         let mut deps = mock_dependencies();
         mock_init_with_price(deps.as_mut(), coin(2, "token"), coin(2, "token"));
-        mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(150, "ujunox"));
+        mock_register_name(deps.as_mut(), "alice_key", "alice", &coins(2, "token"));
 
         // anyone can register an available name with more fees than needed
         let info = mock_info("bob_key", &coins(5, "token"));
