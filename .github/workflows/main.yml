@@ -21,17 +21,24 @@ jobs:
       with:
         toolchain: stable
     - name: Run tests
-      run: cargo test --release
+      run: cargo test --release --quiet
   build:
     runs-on: ubuntu-latest
     env:
       RUST_CFLAGS: "-C link-args=-s"
     steps:
       - uses: actions/checkout@v3
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: flix_ns.wasm
+          path: target/wasm32-unknown-unknown/release/
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: wasm32-unknown-unknown
+      - name: Install Cargo-Wasm
+        run: cargo install cargo-wasm
       - name: Run Build
         run: cargo wasm
 
