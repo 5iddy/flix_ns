@@ -104,7 +104,7 @@ mod tests {
         assert_eq!(config, Config {
             purchase_price:coin(150, "ujunox"), 
             transfer_price: coin(150, "ujunox"),
-            sale_flag: false,
+            sale_flag: true,
             admin: "creator".to_owned()
         });
     }

@@ -45,7 +45,7 @@ mod tests {
             Config {
                 purchase_price: coin(100, "ujunox"),
                 transfer_price: coin(100, "ujunox"),
-                sale_flag: false,
+                sale_flag: true,
                 admin: "creator".to_owned()
             },
         );
@@ -62,7 +62,7 @@ mod tests {
             Config {
                 purchase_price: coin(3, "token"),
                 transfer_price: coin(4, "token"),
-                sale_flag: false,
+                sale_flag: true,
                 admin: "creator".to_owned()
             },
         );
