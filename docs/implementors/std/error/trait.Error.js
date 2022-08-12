@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["flix_ns"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.62.1/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"enum\" href=\"flix_ns/enum.ContractError.html\" title=\"enum flix_ns::ContractError\">ContractError</a>","synthetic":false,"types":["flix_ns::error::ContractError"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
