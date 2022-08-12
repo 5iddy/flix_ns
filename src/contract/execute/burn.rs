@@ -2,7 +2,7 @@ use crate::error::ContractError;
 use crate::helpers::{sanitize_name, verified_name_owner};
 
 use crate::{Cw721Contract, Cw721ExecuteMsg};
-use cosmwasm_std::{ DepsMut, Env, MessageInfo, Response};
+use cosmwasm_std::{DepsMut, Env, MessageInfo, Response};
 
 /// Delete Name or NFT
 /// ```json
@@ -22,7 +22,7 @@ pub fn burn_name_nft(
 
     // Get the owner's address for name/NFT
     let owner = verified_name_owner(&deps, env.clone(), name.clone())?;
-    
+
     // If the sender is the owner of the name/NFT
     if info.sender == owner {
         // Issue a burn request to the Cw721Contract
@@ -38,12 +38,12 @@ pub fn burn_name_nft(
 }
 
 #[cfg(test)]
-mod tests{
-    use crate::{execute, ContractError};
-    use crate::helpers::testing::{mock_init_with_price, mock_register_name,};
+mod tests {
+    use crate::helpers::testing::{mock_init_with_price, mock_register_name};
     use crate::ExecuteMsg;
-    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use crate::{execute, ContractError};
     use cosmwasm_std::coin;
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
 
     #[test]
     fn burn_name_nft_works() {
@@ -59,8 +59,8 @@ mod tests{
         };
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
-            Ok(_) => {},
-            Err(e) => panic!("Error Occured: {}", e)
+            Ok(_) => {}
+            Err(e) => panic!("Error Occured: {}", e),
         };
     }
 
@@ -80,8 +80,8 @@ mod tests{
 
         match execute(deps.as_mut(), env, info, msg) {
             Ok(_) => panic!("Must Throw Error"),
-            Err(ContractError::Unauthorized {  }) => {},
-            Err(e) => panic!("Unexpected Error Occured: {}", e)
+            Err(ContractError::Unauthorized {}) => {}
+            Err(e) => panic!("Unexpected Error Occured: {}", e),
         };
     }
 }

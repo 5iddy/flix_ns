@@ -1,14 +1,10 @@
 use crate::config::CONFIG;
 use crate::error::ContractError;
-use crate::helpers::{
-    assert_sent_sufficient_coin, sanitize_name, validate_name,
-};
+use crate::helpers::{assert_sent_sufficient_coin, sanitize_name, validate_name};
 use crate::{Cw721Contract, Cw721ContractError, Cw721ExecuteMsg, Cw721MintMsg};
-use cosmwasm_std::{
-   DepsMut, Env, MessageInfo, Response
-};
+use cosmwasm_std::{DepsMut, Env, MessageInfo, Response};
 
-/// Function that handles the registeration of a name for a wallet
+/// Function that handles the registration of a name for a wallet
 /// Also mints the name as an cw721 compatible NFT with Empty Metadata Extention
 pub fn register_name_nft(
     deps: DepsMut,
@@ -48,16 +44,20 @@ pub fn register_name_nft(
         }
     } else {
         // if the sale_flag is false, names cannot be registered.
-        Err(ContractError::ClosedSaleWindow { flag: config.sale_flag })
+        Err(ContractError::ClosedSaleWindow {
+            flag: config.sale_flag,
+        })
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::super::execute;
+    use crate::execute;
     use crate::helpers::testing::{
-        assert_name_owner, mock_init_no_price, mock_init_with_price, mock_register_name,
+        assert_config_state, assert_name_owner, mock_init_no_price, mock_init_with_params,
+        mock_init_with_price, mock_register_name,
     };
+    use crate::Config;
     use crate::ContractError;
     use crate::ExecuteMsg;
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
@@ -202,4 +202,36 @@ mod tests {
         }
     }
 
+    #[test]
+    fn registration_fails_on_false_sale_flag() {
+        let mut deps = mock_dependencies();
+        mock_init_with_params(
+            deps.as_mut(),
+            Some(coin(100, "token")),
+            Some(coin(100, "token")),
+            Some(false),
+            Some("creator".to_string()),
+        );
+
+        assert_config_state(
+            deps.as_ref(),
+            Config {
+                purchase_price: coin(100, "token"),
+                transfer_price: coin(100, "token"),
+                sale_flag: false,
+                admin: "creator".to_owned(),
+            },
+        );
+
+        let msg = ExecuteMsg::Register {
+            name: "alice".to_owned(),
+        };
+        let info = mock_info("alice_key", &coins(100, "token"));
+
+        let _res = match execute(deps.as_mut(), mock_env(), info, msg) {
+            Ok(_) => panic!("Must throw an error"),
+            Err(ContractError::ClosedSaleWindow { flag }) => assert_eq!(flag, false),
+            Err(e) => panic!("Unexpected error occured: {}", e),
+        };
+    }
 }

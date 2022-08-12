@@ -1,18 +1,28 @@
-use serde::{Serialize, Deserialize};
+use cosmwasm_std::Coin;
 use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
     /// ResolveRecord returns the current address that the name resolves to
-    ResolveRecord { name: String },
+    ResolveRecord {
+        name: String,
+    },
     Config {},
-    QueryBalance { name: String }
+    Balance {
+        name: String,
+    },
+    Approvals {
+        name: String,
+        include_expired: bool,
+    },
+    GetSaleFalg {},
 }
 
-// We define a custom struct for each query response
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct ResolveRecordResponse {
-    pub name: String,
-    pub address: Option<String>,
+pub enum QueryResponse {
+    NameRecord { name: String, address: String },
+    Balance { name: String, amount: Vec<Coin> },
+    SaleFlag { flag: bool },
 }

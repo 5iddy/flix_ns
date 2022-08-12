@@ -47,8 +47,8 @@ pub fn execute(
         } => approve_spender_for_name(deps, env, info, spender, name, expires),
         ExecuteMsg::Revoke { spender, name } => {
             revoke_spender_for_name(deps, env, info, spender, name)
-        },
+        }
         ExecuteMsg::SetSale { flag } => set_sale_flag(deps, info, flag),
-        ExecuteMsg::ChangeAdmin { admin } => change_admin(deps, env, info, admin)
+        ExecuteMsg::ChangeAdmin { admin } => change_admin(deps, env, info, admin),
     }
 }

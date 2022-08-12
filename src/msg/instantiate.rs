@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
-use schemars::JsonSchema;
 use cosmwasm_std::Coin;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 /// ### Example Json Payload for InstantiateMsg :
 /// ```json
@@ -8,7 +8,7 @@ use cosmwasm_std::Coin;
 ///     "purchase_price": {
 ///         "amount":"100",
 ///         "denom":"ujunox"
-    
+
 ///     },
 ///     "transfer_price": {
 ///         "amount":"100",
@@ -16,7 +16,7 @@ use cosmwasm_std::Coin;
 ///     }
 /// }
 /// ```
-/// 
+///
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
     /// The price for registering the name
@@ -27,5 +27,5 @@ pub struct InstantiateMsg {
     /// for their wallet
     pub sale_flag: Option<bool>,
     /// The admin will be able to toggle the sale flag
-    pub admin: Option<String>
+    pub admin: Option<String>,
 }

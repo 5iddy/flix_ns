@@ -1,9 +1,8 @@
 use crate::config::{MAX_NAME_LENGTH, MIN_NAME_LENGTH, SUFFIX};
 use crate::error::ContractError;
-use crate::Cw721Query;
 use crate::Cw721Contract;
+use crate::Cw721Query;
 use cosmwasm_std::{Addr, DepsMut, Env};
-
 
 // Sanitize name
 pub fn sanitize_name(name: String) -> String {
@@ -19,7 +18,7 @@ pub fn sanitize_name(name: String) -> String {
 
 // let's not import a regexp library and just do these checks by hand
 fn is_invalid_char(c: char) -> bool {
-    let is_valid = c.is_digit(10) || c.is_ascii_lowercase() || (c == '_');
+    let is_valid = c.is_ascii_digit() || c.is_ascii_lowercase() || (c == '_');
     !is_valid
 }
 

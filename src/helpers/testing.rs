@@ -1,22 +1,27 @@
 use crate::state::Config;
+use crate::{execute, instantiate, query};
+use crate::{ExecuteMsg, InstantiateMsg, QueryMsg, QueryResponse};
 use cosmwasm_std::testing::{mock_env, mock_info};
 use cosmwasm_std::{coins, from_binary, Coin, Deps, DepsMut};
-use crate::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
-use crate::{execute, instantiate, query};
 
 pub fn assert_name_owner(deps: Deps, name: &str, owner: &str) {
     let res = query(
         deps,
         mock_env(),
         QueryMsg::ResolveRecord {
-            name: name.to_string(),
+            name: name.clone().to_string(),
         },
     )
     .unwrap();
 
-    let value: ResolveRecordResponse = from_binary(&res).unwrap();
-    assert_eq!(Some(owner.to_string()), value.address);
-    assert_eq!(name.to_string(), value.name);
+    let value: QueryResponse = from_binary(&res).unwrap();
+    assert_eq!(
+        value,
+        QueryResponse::NameRecord {
+            name: name.to_owned(),
+            address: owner.to_owned()
+        }
+    );
 }
 
 pub fn assert_config_state(deps: Deps, expected: Config) {
@@ -30,7 +35,7 @@ pub fn mock_init_with_price(deps: DepsMut, purchase_price: Coin, transfer_price:
         purchase_price: Some(purchase_price),
         transfer_price: Some(transfer_price),
         sale_flag: None,
-        admin: None
+        admin: None,
     };
 
     let info = mock_info("creator", &coins(2, "token"));
@@ -44,20 +49,35 @@ pub fn mock_init_no_price(deps: DepsMut) {
         purchase_price: None,
         transfer_price: None,
         sale_flag: None,
-        admin: None
+        admin: None,
     };
 
     let info = mock_info("creator", &coins(2, "token"));
-    let _res = instantiate(deps, mock_env(), info, msg)
-        .expect("contract successfully handles InstantiateMsg");
+    let _res = instantiate(deps, mock_env(), info, msg).expect("Unexpected Error: ");
+}
+
+pub fn mock_init_with_params(
+    deps: DepsMut,
+    purchase_price: Option<Coin>,
+    transfer_price: Option<Coin>,
+    sale_flag: Option<bool>,
+    admin: Option<String>,
+) {
+    let msg = InstantiateMsg {
+        purchase_price,
+        transfer_price,
+        sale_flag,
+        admin,
+    };
+
+    let info = mock_info("creator", &[]);
+    let _res = instantiate(deps, mock_env(), info, msg).expect("Unexpected Error: ");
 }
 
 pub fn mock_register_name(deps: DepsMut, key: &str, name: &str, sent: &[Coin]) {
-    // alice can register an available name
     let info = mock_info(&key, sent);
     let msg = ExecuteMsg::Register {
         name: name.to_string(),
     };
-    let _res = execute(deps, mock_env(), info, msg)
-        .expect("contract successfully handles Register message");
+    let _res = execute(deps, mock_env(), info, msg).expect("Unexpected Error: ");
 }

@@ -1,13 +1,13 @@
 use cosmwasm_std::Coin;
+use cw721::Expiration;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cw721::Expiration;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
     /// Register a name for a wallet
-    /// 
+    ///
     /// ```json
     ///     {
     ///         "register": {
@@ -16,9 +16,9 @@ pub enum ExecuteMsg {
     ///     }
     /// ```
     Register { name: String },
-    
+
     /// Transfer the ownership to a different wallet
-    /// 
+    ///
     /// ```json
     ///     {
     ///         "transfer_name": {
@@ -28,9 +28,9 @@ pub enum ExecuteMsg {
     ///     }
     /// ```
     TransferName { name: String, to: String },
-    
+
     /// Send tokens to aa wallet based on their name
-    /// 
+    ///
     /// ```json
     ///     {
     ///         "send_tokens": {
@@ -47,7 +47,7 @@ pub enum ExecuteMsg {
     SendTokens { name: String, amount: Vec<Coin> },
 
     /// Burn NFT
-    /// 
+    ///
     /// ```json
     ///     {
     ///         "burn": {
@@ -68,7 +68,7 @@ pub enum ExecuteMsg {
     ///                 "at_height": <block-height-u64>,
     ///                     // or
     ///                 "at_time": <unix-timestamp>,
-    ///                     // or 
+    ///                     // or
     ///                 "never": {}
     ///             }
     ///         }
@@ -110,7 +110,5 @@ pub enum ExecuteMsg {
     ///         }
     ///     }
     /// ```
-    ChangeAdmin { admin: String }
+    ChangeAdmin { admin: String },
 }
-
-

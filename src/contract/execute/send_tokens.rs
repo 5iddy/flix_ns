@@ -1,10 +1,9 @@
 use crate::error::ContractError;
 use crate::helpers::{assert_sent_sufficient_coins, sanitize_name};
 
-use crate::Cw721Query;
 use crate::Cw721Contract;
+use crate::Cw721Query;
 use cosmwasm_std::{BankMsg, Coin, Deps, Env, MessageInfo, Response};
-
 
 pub fn send_tokens_to_named_wallet(
     deps: Deps,
@@ -43,7 +42,7 @@ pub fn send_tokens_to_named_wallet(
 #[cfg(test)]
 mod tests {
     use crate::execute;
-    use crate::helpers::testing::{mock_init_with_price, mock_register_name,};
+    use crate::helpers::testing::{mock_init_with_price, mock_register_name};
     use crate::ContractError;
     use crate::ExecuteMsg;
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
@@ -64,8 +63,8 @@ mod tests {
         };
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
-            Ok(_) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Ok(_) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -84,8 +83,8 @@ mod tests {
         };
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
-            Ok(_) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Ok(_) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -105,8 +104,8 @@ mod tests {
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
             Ok(r) => panic!("Expected an error: {:#?}", r),
-            Err(ContractError::InsufficientFundsSent {  }) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Err(ContractError::InsufficientFundsSent {}) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -126,8 +125,8 @@ mod tests {
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
             Ok(r) => panic!("Expected an error: {:#?}", r),
-            Err(ContractError::InsufficientFundsSent {  }) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Err(ContractError::InsufficientFundsSent {}) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -147,8 +146,8 @@ mod tests {
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
             Ok(r) => panic!("Expected an error: {:#?}", r),
-            Err(ContractError::InsufficientFundsSent {  }) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Err(ContractError::InsufficientFundsSent {}) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -168,8 +167,8 @@ mod tests {
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
             Ok(r) => panic!("Expected an error: {:#?}", r),
-            Err(ContractError::InsufficientFundsSent {  }) => {},
-            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e)
+            Err(ContractError::InsufficientFundsSent {}) => {}
+            Err(e) => panic!("Unexpected Error Occured -> {:#?}", e),
         };
     }
 
@@ -188,7 +187,7 @@ mod tests {
         };
 
         match execute(deps.as_mut(), mock_env(), info, msg) {
-            Ok(_) => {},
+            Ok(_) => {}
             Err(e) => panic!("Unxpected an error: {:#?}", e),
         };
     }

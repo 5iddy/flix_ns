@@ -1,8 +1,8 @@
 //! # Error Variants for the OmniFlix NameService Contract
 
 use cosmwasm_std::StdError;
-use thiserror::Error;
 use cw721_base::ContractError as Cw721ContractError;
+use thiserror::Error;
 
 /// ## Contract Errors
 /// The following are the errors that might raise while handling
@@ -56,8 +56,8 @@ pub enum ContractError {
 
     /// When sale_flag is false, the Sale Window is considered to be closed.
     /// No new registrations can be made if the sale_flag is false.
-    /// This error is raised when a registration is executed while 
+    /// This error is raised when a registration is executed while
     /// the sale_flag is false.
     #[error("Sale Window is now closed. sale flag: {flag}")]
-    ClosedSaleWindow { flag: bool }
+    ClosedSaleWindow { flag: bool },
 }

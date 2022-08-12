@@ -1,8 +1,8 @@
-use cosmwasm_std::{entry_point, DepsMut, Env, MessageInfo, Response};
-use crate::msg::{InstantiateMsg};
-use crate::error::ContractError;
 use crate::config::CONFIG;
-use crate::{Cw721InstantiateMsg, Cw721Contract, Config};
+use crate::error::ContractError;
+use crate::msg::InstantiateMsg;
+use crate::{Config, Cw721Contract, Cw721InstantiateMsg};
+use cosmwasm_std::{entry_point, DepsMut, Env, MessageInfo, Response};
 
 #[entry_point]
 pub fn instantiate(
@@ -22,7 +22,7 @@ pub fn instantiate(
 
     match Cw721Contract::default().instantiate(deps, env, info, init_msg) {
         Ok(res) => Ok(res),
-        Err(e) => Err(ContractError::Std(e))
+        Err(e) => Err(ContractError::Std(e)),
     }
 }
 
@@ -46,7 +46,7 @@ mod tests {
                 purchase_price: coin(100, "ujunox"),
                 transfer_price: coin(100, "ujunox"),
                 sale_flag: true,
-                admin: "creator".to_owned()
+                admin: "creator".to_owned(),
             },
         );
     }
@@ -63,9 +63,8 @@ mod tests {
                 purchase_price: coin(3, "token"),
                 transfer_price: coin(4, "token"),
                 sale_flag: true,
-                admin: "creator".to_owned()
+                admin: "creator".to_owned(),
             },
         );
     }
-
 }

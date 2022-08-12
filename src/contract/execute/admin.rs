@@ -16,7 +16,7 @@ pub fn change_admin(
     new_admin: String,
 ) -> Result<Response, ContractError> {
     let mut config = CONFIG.load(deps.storage)?;
-    if config.admin == info.sender.to_string() {
+    if config.admin == info.sender {
         config.admin = new_admin;
         CONFIG.save(deps.storage, &config)?;
         Ok(Response::default())
@@ -51,11 +51,12 @@ mod tests {
             admin: "alice_key".to_owned(),
         };
         let _res = execute(
-            deps.as_mut(), 
-            mock_env(), 
+            deps.as_mut(),
+            mock_env(),
             mock_info("creator", &[]),
-            execute_msg
-        ).expect("Unexpected error.");
+            execute_msg,
+        )
+        .expect("Unexpected error.");
     }
 
     #[test]
@@ -77,15 +78,16 @@ mod tests {
             admin: "alice_key".to_owned(),
         };
         let _res = execute(
-            deps.as_mut(), 
-            mock_env(), 
+            deps.as_mut(),
+            mock_env(),
             mock_info("alice_key", &[]),
-            execute_msg
-        ).expect_err("Test Passed Successfully throwing an error");
+            execute_msg,
+        )
+        .expect_err("Test Passed Successfully throwing an error");
     }
 
     #[test]
-    fn change_admin_fails_on_unauthorized_request2(){
+    fn change_admin_fails_on_unauthorized_request2() {
         let mut deps = mock_dependencies();
 
         mock_init_no_price(deps.as_mut());
@@ -104,10 +106,11 @@ mod tests {
         };
 
         let _res = execute(
-            deps.as_mut(), 
-            mock_env(), 
+            deps.as_mut(),
+            mock_env(),
             mock_info("bob_key", &[]),
-            execute_msg
-        ).expect_err("Test Passed");
+            execute_msg,
+        )
+        .expect_err("Test Passed");
     }
 }
