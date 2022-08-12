@@ -4,6 +4,43 @@ use crate::msg::InstantiateMsg;
 use crate::{Config, Cw721Contract, Cw721InstantiateMsg};
 use cosmwasm_std::{entry_point, DepsMut, Env, MessageInfo, Response};
 
+/// The main instantiate handler, the entry point that will handle the instantiation.
+/// ```json
+/// {
+///     "purchase_price": {
+///         "amount": "1000",
+///         "denom": "ujunox"
+///     },
+///     "transfer_price": {
+///         "amount": "1000",
+///         "denom": "ujunox"
+///     },
+///     "sale_flag": true,
+///     "admin": "juno12.....asdasdw2"
+/// }
+/// ```
+/// 
+/// If any key fields are not included, a default value is set.
+/// 
+/// ```json
+/// {
+///     "transfer_price": {
+///         "amount": "1000",
+///         "denom": "ujunox"
+///     },
+///     "admin": "juno12.....asdasdw2"
+/// }
+/// ```
+/// 
+/// Default Values:
+/// ```notest
+/// Config {
+///     purchase_price: coin(100, "ujunox"),
+///     transfer_price: coin(100, "ujunox"),
+///     sale_flag: true,
+///     admin: info.sender 
+/// }
+/// ```
 #[entry_point]
 pub fn instantiate(
     deps: DepsMut,

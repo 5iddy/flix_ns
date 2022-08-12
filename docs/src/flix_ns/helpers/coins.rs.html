@@ -196,7 +196,7 @@
 <span class="doccomment">/// intended to be sent to the owner of a name. Unlike `assert_sent_sufficient_coin`, this can</span>
 <span class="doccomment">/// be used to check for presense of multiple coins.</span>
 <span class="doccomment">/// </span>
-<span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// ```notest</span>
 <span class="doccomment">/// assert_sent_sufficient_coins(&amp;info.funds, &amp;msg.amount);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">assert_sent_sufficient_coins</span>(<span class="ident">sent</span>: <span class="kw-2">&amp;</span>[<span class="ident">Coin</span>], <span class="ident">required</span>: <span class="kw-2">&amp;</span>[<span class="ident">Coin</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ContractError</span><span class="op">&gt;</span> {

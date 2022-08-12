@@ -1,9 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InstantiateMsg",
+  "title": "Example Json Payload for InstantiateMsg :",
+  "description": "```json { \"purchase_price\": { \"amount\":\"100\", \"denom\":\"ujunox\" }, \"transfer_price\": { \"amount\":\"100\", \"denom\":\"ujunox\" } } ```",
   "type": "object",
   "properties": {
+    "admin": {
+      "description": "The admin will be able to toggle the sale flag",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "purchase_price": {
+      "description": "The price for registering the name",
       "anyOf": [
         {
           "$ref": "#/definitions/Coin"
@@ -13,7 +22,15 @@
         }
       ]
     },
+    "sale_flag": {
+      "description": "When the sale flag is true, people will be able to buy/register a name for their wallet",
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
     "transfer_price": {
+      "description": "The price for transfering the name to a different wallet",
       "anyOf": [
         {
           "$ref": "#/definitions/Coin"

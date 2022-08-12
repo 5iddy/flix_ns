@@ -1,9 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "QueryMsg",
+  "description": "Query enum variants are for distinguishing various kinds of query requests",
   "oneOf": [
     {
-      "description": "ResolveRecord returns the current address that the name resolves to",
+      "description": "ResolveRecord returns the current address that the name resolves to Refer to [QueryResponse] for response info.\n\n```json { \"resolve_record\": { \"name\": \"alice\" } } ```",
       "type": "object",
       "required": [
         "resolve_record"
@@ -16,6 +17,7 @@
           ],
           "properties": {
             "name": {
+              "description": "Queries for the owner of this name",
               "type": "string"
             }
           }
@@ -24,6 +26,7 @@
       "additionalProperties": false
     },
     {
+      "description": "For querying for the current config state\n\n```json { \"config\" : {} } ```",
       "type": "object",
       "required": [
         "config"
@@ -36,21 +39,63 @@
       "additionalProperties": false
     },
     {
+      "description": "Querying for the balance of the owner of name ```json { \"balance\": { \"name\": \"alice\" } } ```",
       "type": "object",
       "required": [
-        "query_balance"
+        "balance"
       ],
       "properties": {
-        "query_balance": {
+        "balance": {
           "type": "object",
           "required": [
             "name"
           ],
           "properties": {
             "name": {
+              "description": "Based on the name, the owner's address will be resolved",
               "type": "string"
             }
           }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "description": "For querying Approvals of a Name NFT ```json { \"approvals\": { \"name\": \"alice\", \"incldue_expired\": flase } } ```",
+      "type": "object",
+      "required": [
+        "approvals"
+      ],
+      "properties": {
+        "approvals": {
+          "type": "object",
+          "required": [
+            "include_expired",
+            "name"
+          ],
+          "properties": {
+            "include_expired": {
+              "description": "The option to whether or not include expiration info",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "the name that we want query approvals for",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "description": "For querying the current value of sale flag ```json { \"get_sale_flag\": {} } ```",
+      "type": "object",
+      "required": [
+        "get_sale_flag"
+      ],
+      "properties": {
+        "get_sale_flag": {
+          "type": "object"
         }
       },
       "additionalProperties": false

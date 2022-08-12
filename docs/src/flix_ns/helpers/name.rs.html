@@ -83,7 +83,7 @@
 
 <span class="doccomment">/// Removes &quot;.flix&quot; suffix if it ends with it and transforms</span>
 <span class="doccomment">/// all the letters to lower case.</span>
-<span class="doccomment">/// ```</span>
+<span class="doccomment">/// ```notest</span>
 <span class="doccomment">/// let clean_name = sanitize_name(name);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sanitize_name</span>(<span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="ident">String</span> {
@@ -105,7 +105,7 @@
 
 <span class="doccomment">/// validate_name returns an error if the name is invalid</span>
 <span class="doccomment">/// (we require 3-64 lowercase ascii letters, numbers, or . - _)</span>
-<span class="doccomment">/// ```</span>
+<span class="doccomment">/// ```notest</span>
 <span class="doccomment">/// validate_name(name)?;</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate_name</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ContractError</span><span class="op">&gt;</span> {
@@ -133,7 +133,7 @@
 
 
 <span class="doccomment">/// When given a name, the function returns the address of that name -&gt; [Addr]</span>
-<span class="doccomment">/// ```</span>
+<span class="doccomment">/// ```notest</span>
 <span class="doccomment">/// let owner: Addr = verified_name_owner(&amp;deps, env, &quot;alice&quot;.to_owned())?;</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verified_name_owner</span>(<span class="ident">deps</span>: <span class="kw-2">&amp;</span><span class="ident">DepsMut</span>, <span class="ident">env</span>: <span class="ident">Env</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Addr</span>, <span class="ident">ContractError</span><span class="op">&gt;</span> {

@@ -137,7 +137,7 @@
     <span class="doccomment">/// ResolveRecord returns the current address that the name resolves to</span>
     <span class="doccomment">/// Refer to [QueryResponse] for response info.</span>
     <span class="doccomment">/// </span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;resolve_record&quot;: {</span>
     <span class="doccomment">///         &quot;name&quot;: &quot;alice&quot;</span>
@@ -151,7 +151,7 @@
 
     <span class="doccomment">/// For querying for the current config state </span>
     <span class="doccomment">/// </span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;config&quot; : {}</span>
     <span class="doccomment">/// }</span>
@@ -159,7 +159,7 @@
     <span class="ident">Config</span> {},
     
     <span class="doccomment">/// Querying for the balance of the owner of name</span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;balance&quot;: {</span>
     <span class="doccomment">///         &quot;name&quot;: &quot;alice&quot;</span>
@@ -172,7 +172,7 @@
     },
 
     <span class="doccomment">/// For querying Approvals of a Name NFT</span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;approvals&quot;: {</span>
     <span class="doccomment">///         &quot;name&quot;: &quot;alice&quot;,</span>
@@ -188,7 +188,7 @@
     },
 
     <span class="doccomment">/// For querying the current value of sale flag</span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;get_sale_flag&quot;: {}</span>
     <span class="doccomment">/// }</span>
@@ -216,7 +216,7 @@
         <span class="ident">address</span>: <span class="ident">String</span> 
     },
     <span class="doccomment">/// Response for when [QueryMsg::Balance] is invoked</span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;balance&quot;: {</span>
     <span class="doccomment">///         &quot;name&quot;: &quot;alice&quot;,</span>
@@ -237,7 +237,7 @@
     },
 
     <span class="doccomment">/// Response for when [QueryMsg::GetSaleFlag] is requested</span>
-    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// ```json</span>
     <span class="doccomment">/// {</span>
     <span class="doccomment">///     &quot;sale_flag&quot;: {</span>
     <span class="doccomment">///         &quot;flag&quot;: true</span>
