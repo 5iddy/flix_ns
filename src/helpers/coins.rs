@@ -1,6 +1,15 @@
 use crate::error::ContractError;
 use cosmwasm_std::Coin;
 
+/// A function to check if sufficient coin for a given action is sent.
+/// 
+/// params:
+/// sent: The sent coin, usually `info.funds`
+/// required: Required Coin is set by the contract user during instantiation.
+///         It is stored in `Config { purchase_price || transfer_price }`
+/// 
+/// *note: This function is used for registration and transfer endpoints only.
+/// For SendTokens endpoint, [`assert_sent_sufficient_coins`](fn.assert_sent_sufficient_coins.html) is used.* 
 pub fn assert_sent_sufficient_coin(
     sent: &[Coin],
     required: Option<Coin>,
@@ -24,6 +33,13 @@ pub fn assert_sent_sufficient_coin(
     Ok(())
 }
 
+/// To check if the sender sent sufficient coins to the contract, for the SendTokens endpoint
+/// intended to be sent to the owner of a name. Unlike `assert_sent_sufficient_coin`, this can
+/// be used to check for presense of multiple coins.
+/// 
+/// ```rust
+/// assert_sent_sufficient_coins(&info.funds, &msg.amount);
+/// ```
 pub fn assert_sent_sufficient_coins(sent: &[Coin], required: &[Coin]) -> Result<(), ContractError> {
     if required.iter().all(|required_coin| {
         let required_amount = required_coin.amount.u128();

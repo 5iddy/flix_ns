@@ -3,23 +3,35 @@ use cosmwasm_std::{coin, Coin, DepsMut, MessageInfo};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-/// Configuration Vars
+/// Configuration State
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Config {
-    /// Purchase Price for a name
+    /// The amount that must be sent to the contract during registration.
+    /// This amount doesn't include gas fee. It is set when the contract is 
+    /// instantiated and the prices cannot be changed once set.
     pub purchase_price: Coin,
 
-    /// Transfer Price for a name
+    /// The amount that must be sent to the contract during transfer.
+    /// This amount doesn't include gas fee. It is set when the contract is 
+    /// instantiated and the prices cannot be changed once set.
     pub transfer_price: Coin,
 
-    /// If sale flag is true, name can be purchased
+    /// If sale flag is true, name can be registered. Otherwise, it cannot be
+    /// registered until sale_flag is set to true. Only the admin can set the
+    /// sale_flag using the [`ExecuteMsg::SetSale`](crate::ExecuteMsg::SetSale).
     pub sale_flag: bool,
 
-    /// The only address that can change the sale_flag
+    /// Admin can change the sale_flag after the instantiation process.
+    /// The sale_flag can only changed by the admin. [`ExecuteMsg::SetSale`](crate::ExecuteMsg::SetSale) and [`ExecuteMsg::ChangeAdmin`](crate::ExecuteMsg::ChangeAdmin)
+    /// only work when called by this address.
     pub admin: String,
 }
 
 impl Config {
+    /// Easy method to validate the [InstantiateMsg] and create a Config variable
+    /// ```
+    /// let config: Config = Config::new(&deps, info, msg);
+    /// ```
     pub fn new(deps: &DepsMut, info: MessageInfo, msg: InstantiateMsg) -> Self {
         let purchase_price = msg.purchase_price.unwrap_or_else(|| coin(100, "ujunox"));
 

@@ -26,6 +26,8 @@ use sale::set_sale_flag;
 mod admin;
 use admin::change_admin;
 
+/// The main Entry Point for the contract execution.
+/// It is called by the contract when an [`ExcuteMsg`](enum.ExecuteMsg.html) message is passed as the payload.
 #[entry_point]
 pub fn execute(
     deps: DepsMut,

@@ -18,7 +18,7 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
             name,
             include_expired,
         } => get_approvals(deps, env, name, include_expired),
-        QueryMsg::GetSaleFalg {} => get_sale_flag(deps, env),
+        QueryMsg::GetSaleFlag {} => get_sale_flag(deps, env),
     }
 }
 

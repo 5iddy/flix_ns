@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["execute","The main Entry Point for the contract execution. It is called by the contract when an `ExcuteMsg` message is passed as the payload."],["instantiate",""],["query",""]]});
