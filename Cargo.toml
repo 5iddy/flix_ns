@@ -1,7 +1,7 @@
 [package]
 name = "flix_ns"
 description = "Flix name service"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Siddhu Yeturi <siddhuyeturi@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0"
