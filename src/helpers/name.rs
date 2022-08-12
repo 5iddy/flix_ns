@@ -6,7 +6,7 @@ use cosmwasm_std::{Addr, DepsMut, Env};
 
 /// Removes ".flix" suffix if it ends with it and transforms
 /// all the letters to lower case.
-/// ```
+/// ```notest
 /// let clean_name = sanitize_name(name);
 /// ```
 pub fn sanitize_name(name: String) -> String {
@@ -28,7 +28,7 @@ fn is_invalid_char(c: char) -> bool {
 
 /// validate_name returns an error if the name is invalid
 /// (we require 3-64 lowercase ascii letters, numbers, or . - _)
-/// ```
+/// ```notest
 /// validate_name(name)?;
 /// ```
 pub fn validate_name(name: &str) -> Result<(), ContractError> {
@@ -56,7 +56,7 @@ pub fn validate_name(name: &str) -> Result<(), ContractError> {
 
 
 /// When given a name, the function returns the address of that name -> [Addr]
-/// ```
+/// ```notest
 /// let owner: Addr = verified_name_owner(&deps, env, "alice".to_owned())?;
 /// ```
 pub fn verified_name_owner(deps: &DepsMut, env: Env, name: String) -> Result<Addr, ContractError> {

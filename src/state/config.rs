@@ -29,7 +29,7 @@ pub struct Config {
 
 impl Config {
     /// Easy method to validate the [InstantiateMsg] and create a Config variable
-    /// ```
+    /// ```notest
     /// let config: Config = Config::new(&deps, info, msg);
     /// ```
     pub fn new(deps: &DepsMut, info: MessageInfo, msg: InstantiateMsg) -> Self {

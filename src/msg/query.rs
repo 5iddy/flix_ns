@@ -9,7 +9,7 @@ pub enum QueryMsg {
     /// ResolveRecord returns the current address that the name resolves to
     /// Refer to [QueryResponse] for response info.
     /// 
-    /// ```
+    /// ```json
     /// {
     ///     "resolve_record": {
     ///         "name": "alice"
@@ -23,7 +23,7 @@ pub enum QueryMsg {
 
     /// For querying for the current config state 
     /// 
-    /// ```
+    /// ```json
     /// {
     ///     "config" : {}
     /// }
@@ -31,7 +31,7 @@ pub enum QueryMsg {
     Config {},
     
     /// Querying for the balance of the owner of name
-    /// ```
+    /// ```json
     /// {
     ///     "balance": {
     ///         "name": "alice"
@@ -44,7 +44,7 @@ pub enum QueryMsg {
     },
 
     /// For querying Approvals of a Name NFT
-    /// ```
+    /// ```json
     /// {
     ///     "approvals": {
     ///         "name": "alice",
@@ -60,7 +60,7 @@ pub enum QueryMsg {
     },
 
     /// For querying the current value of sale flag
-    /// ```
+    /// ```json
     /// {
     ///     "get_sale_flag": {}
     /// }
@@ -88,7 +88,7 @@ pub enum QueryResponse {
         address: String 
     },
     /// Response for when [QueryMsg::Balance] is invoked
-    /// ```
+    /// ```json
     /// {
     ///     "balance": {
     ///         "name": "alice",
@@ -109,7 +109,7 @@ pub enum QueryResponse {
     },
 
     /// Response for when [QueryMsg::GetSaleFlag] is requested
-    /// ```
+    /// ```json
     /// {
     ///     "sale_flag": {
     ///         "flag": true

@@ -37,7 +37,7 @@ pub fn assert_sent_sufficient_coin(
 /// intended to be sent to the owner of a name. Unlike `assert_sent_sufficient_coin`, this can
 /// be used to check for presense of multiple coins.
 /// 
-/// ```rust
+/// ```notest
 /// assert_sent_sufficient_coins(&info.funds, &msg.amount);
 /// ```
 pub fn assert_sent_sufficient_coins(sent: &[Coin], required: &[Coin]) -> Result<(), ContractError> {
