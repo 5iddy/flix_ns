@@ -147,21 +147,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cw-nameservice"
-version = "0.4.0"
-dependencies = [
- "cosmwasm-schema",
- "cosmwasm-std",
- "cw-storage-plus 0.14.0",
- "cw-utils 0.14.0",
- "cw721",
- "cw721-base",
- "schemars",
- "serde",
- "thiserror",
-]
-
-[[package]]
 name = "cw-storage-plus"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -336,6 +321,21 @@ checksum = "131655483be284720a17d74ff97592b8e76576dc25563148601df2d7c9080924"
 dependencies = [
  "rand_core 0.6.3",
  "subtle",
+]
+
+[[package]]
+name = "flix_ns"
+version = "0.4.2"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-storage-plus 0.14.0",
+ "cw-utils 0.14.0",
+ "cw721",
+ "cw721-base",
+ "schemars",
+ "serde",
+ "thiserror",
 ]
 
 [[package]]

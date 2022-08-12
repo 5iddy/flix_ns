@@ -2,7 +2,7 @@ use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 use std::env::current_dir;
 use std::fs::create_dir_all;
 
-use cw_nameservice::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, ResolveRecordResponse};
+use flix_ns::{ExecuteMsg, InstantiateMsg, QueryMsg, QueryResponse};
 
 fn main() {
     let mut out_dir = current_dir().unwrap();
@@ -13,5 +13,5 @@ fn main() {
     export_schema(&schema_for!(InstantiateMsg), &out_dir);
     export_schema(&schema_for!(ExecuteMsg), &out_dir);
     export_schema(&schema_for!(QueryMsg), &out_dir);
-    export_schema(&schema_for!(ResolveRecordResponse), &out_dir);
+    export_schema(&schema_for!(QueryResponse), &out_dir);
 }
