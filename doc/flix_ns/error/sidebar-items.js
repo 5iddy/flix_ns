@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ContractError","Contract Errors"]]});

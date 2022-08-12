@@ -1,1 +1,0 @@
-initSidebarItems({"constant":[["CONFIG","Config state instance where the configuration info is stored."],["MAX_NAME_LENGTH","Maximum length of the name in u64 characters"],["MIN_NAME_LENGTH","Minimum length of name in u64 characters"],["SUFFIX","The suffix for the name"]]});
