@@ -1,0 +1,6 @@
+{
+    "transfer_name": {
+        "name": $name,
+        "to": $to
+    }
+}

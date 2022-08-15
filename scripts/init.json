@@ -7,5 +7,6 @@
     "transfer_price": {
         "amount":"100",
         "denom":"ujunox"   
-    }
+    },
+    "sale_flag": true
 }
